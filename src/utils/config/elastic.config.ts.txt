@@ -1,0 +1,19 @@
+import { registerAs } from '@nestjs/config';
+
+export default registerAs('elastic', () => ({
+  node: 'http://localhost:9200',
+//   auth: {
+//     username: process.env.ELASTICSEARCH_USERNAME || 'elastic',
+//     password: process.env.ELASTICSEARCH_PASSWORD || 'password',
+//   },
+  index: process.env.ELASTICSEARCH_INDEX || 'my_index',
+}));
+
+// export const elasticConfig = () => ({
+//   node: process.env.ELASTICSEARCH_NODE || 'http://localhost:9200',
+//   auth: {
+//     username: process.env.ELASTICSEARCH_USERNAME || 'elastic',
+//     password: process.env.ELASTICSEARCH_PASSWORD || 'password',
+//   },
+//   index: process.env.ELASTICSEARCH_INDEX || 'my_index',
+// });
