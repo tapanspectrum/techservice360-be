@@ -12,9 +12,9 @@ export class CreateUserDto {
   @MinLength(6, { message: 'Password must be at least 6 characters' })
   readonly password: string;
 
-  @IsEnum(['donor', 'receiver', 'admin'])
+  @IsEnum(['tech', 'client', 'admin', 'user'])
   @IsOptional()
-  readonly role?: 'donor' | 'receiver' | 'admin';
+  readonly role?: 'tech' | 'client' | 'admin' | 'user';
 
   @IsString()
   @IsOptional()

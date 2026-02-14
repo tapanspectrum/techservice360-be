@@ -2,6 +2,8 @@ import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { AppController } from './app.controller';
+import { HealthController } from './health.controller';
+import { HealthService } from './health.service';
 import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UserModule } from './user/user.module';
@@ -10,7 +12,6 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { WinstonModule } from 'nest-winston';
 import * as winston from 'winston';
 import { RequestLoggerMiddleware } from './utils/middlewares/request-logger.middleware';
-import { TerminusModule } from '@nestjs/terminus';
 import { HttpModule } from '@nestjs/axios';
 import { UploadModule } from './upload/upload.module';
 import { RolesGuard } from './auth/roles.guard';
@@ -52,7 +53,6 @@ import { NotificationsModule } from './notifications/notifications.module';
     }),
     UserModule,
     AuthModule,
-    TerminusModule,
     HttpModule.register({
       timeout: 3000,
       maxRedirects: 5,
@@ -68,8 +68,8 @@ import { NotificationsModule } from './notifications/notifications.module';
     BillingModule,
     NotificationsModule
   ],
-  controllers: [AppController],
-  providers: [AppService, RolesGuard, MembershipExpiryTask],
+  controllers: [AppController, HealthController],
+  providers: [AppService, RolesGuard, MembershipExpiryTask, HealthService],
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {

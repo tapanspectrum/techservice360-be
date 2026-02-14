@@ -6,7 +6,7 @@ export interface UserDocument extends Document {
   name: string;
   email: string;
   password: string;
-  role: string;
+  role: 'admin' | 'tech' | 'client' | 'user';
   phone?: string;
   address?: string;
   avatar?: string;
@@ -35,8 +35,8 @@ export class User {
 
   @Prop({
     type: String,
-    enum: ['admin', 'user', 'buyer', 'seller'],
-    default: 'user',
+    enum: ['admin', 'tech', 'client', 'user'],
+    default: 'client',
   })
   role: string;
 
