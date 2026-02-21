@@ -7,35 +7,47 @@ import { Billing } from './schemas/billing.schema';
 
 @Injectable()
 export class BillingService {
-  constructor(@InjectModel(Billing.name) private billingModel: Model<Billing>) {}
+  constructor(@InjectModel(Billing.name) private readonly billingModel: Model<Billing>) {}
+
+  get model() {
+    return this.billingModel;
+  }
+
 
   create(createBillingDto: CreateBillingDto) {
+    if (!createBillingDto.tenantId) throw new Error('tenantId is required');
     const createdBilling = new this.billingModel(createBillingDto);
     return createdBilling.save();
   }
 
-  findAll() {
-    return this.billingModel.find().exec();
+
+  findAll(tenantId: string) {
+    return this.billingModel.find({ tenantId }).exec();
   }
 
-  findOne(id: string) {
-    return this.billingModel.findById(id).exec();
+
+  findOne(id: string, tenantId: string) {
+    return this.billingModel.findOne({ _id: id, tenantId }).exec();
   }
 
-  update(id: string, updateBillingDto: UpdateBillingDto) {
-    return this.billingModel.findByIdAndUpdate(id, updateBillingDto, { new: true }).exec();
+
+  update(id: string, updateBillingDto: UpdateBillingDto, tenantId: string) {
+    return this.billingModel.findOneAndUpdate({ _id: id, tenantId }, updateBillingDto, { new: true }).exec();
   }
 
-  remove(id: string) {
-    return this.billingModel.findByIdAndDelete(id).exec();
+
+  remove(id: string, tenantId: string) {
+    return this.billingModel.findOneAndDelete({ _id: id, tenantId }).exec();
   }
 
-  findByClient(clientId: string) {
-    return this.billingModel.find({ clientId }).exec();
+
+  findByClient(clientId: string, tenantId: string) {
+    return this.billingModel.find({ clientId, tenantId }).exec();
   }
 
-  findByStatus(status: string) {
-    return this.billingModel.find({ status }).exec();
+
+  findByStatus(status: string, tenantId: string) {
+    return this.billingModel.find({ status, tenantId }).exec();
   }
 
   findByProject(projectId: string) {

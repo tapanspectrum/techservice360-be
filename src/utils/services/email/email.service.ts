@@ -1,7 +1,7 @@
 import * as nodemailer from "nodemailer";
 import config from "../../config/config";
 import { Message } from "./email.interfaces";
-import { createLogger } from "src/utils/loggers/logger.config";
+import { createLogger } from "../../loggers/logger.config";
 import * as path from "path";
 import * as ejs from "ejs";
 import fs from "fs";

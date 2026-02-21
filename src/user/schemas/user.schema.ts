@@ -6,7 +6,7 @@ export interface UserDocument extends Document {
   name: string;
   email: string;
   password: string;
-  role: 'admin' | 'tech' | 'client' | 'user';
+  role: 'admin' | 'tech' | 'client' | 'supplier' | 'user';
   phone?: string;
   address?: string;
   avatar?: string;
@@ -24,6 +24,8 @@ export interface UserDocument extends Document {
 
 @Schema({ timestamps: true })
 export class User {
+  @Prop({ index: true }) // required handled in pre-save
+  tenantId?: string;
   @Prop({ required: true })
   name: string;
 
@@ -35,7 +37,7 @@ export class User {
 
   @Prop({
     type: String,
-    enum: ['admin', 'tech', 'client', 'user'],
+    enum: ['admin', 'tech', 'client', 'supplier', 'user'],
     default: 'client',
   })
   role: string;
@@ -101,12 +103,23 @@ UserSchema.set('toObject', {
   },
 });
 
+
 // Attach matchPassword method
 UserSchema.methods.matchPassword = async function (
   enteredPassword: string,
 ): Promise<boolean> {
   return bcrypt.compare(enteredPassword, this.password);
 };
+
+// Custom validation: tenantId required unless role is 'admin'
+UserSchema.pre<UserDocument>('save', function (next) {
+  const role = this.get('role');
+  const tenantId = this.get('tenantId');
+  if (role !== 'admin' && (!tenantId || tenantId === '')) {
+    return next(new Error('tenantId is required unless role is admin'));
+  }
+  next();
+});
 
 // Index for geospatial queries
 UserSchema.index({ location: '2dsphere' });

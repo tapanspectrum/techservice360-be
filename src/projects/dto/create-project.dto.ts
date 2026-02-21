@@ -10,6 +10,8 @@ export enum ProjectStatus {
 
 export class CreateProjectDto {
   @IsString()
+  tenantId: string;
+  @IsString()
   name: string;
 
   @IsString()

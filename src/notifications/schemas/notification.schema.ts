@@ -16,6 +16,7 @@ export enum NotificationStatus {
 
 @Schema({ timestamps: true })
 export class Notification extends Document {
+  tenantId: string;
   type: NotificationType;
   recipient: string;
   message: string;

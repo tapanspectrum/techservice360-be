@@ -7,34 +7,46 @@ import { Amc } from './schemas/amc.schema';
 
 @Injectable()
 export class AmcService {
-  constructor(@InjectModel(Amc.name) private amcModel: Model<Amc>) {}
+  constructor(@InjectModel(Amc.name) private readonly amcModel: Model<Amc>) {}
+
+  get model() {
+    return this.amcModel;
+  }
+
 
   create(createAmcDto: CreateAmcDto) {
+    if (!createAmcDto.tenantId) throw new Error('tenantId is required');
     const createdAmc = new this.amcModel(createAmcDto);
     return createdAmc.save();
   }
 
-  findAll() {
-    return this.amcModel.find().exec();
+
+  findAll(tenantId: string) {
+    return this.amcModel.find({ tenantId }).exec();
   }
 
-  findOne(id: string) {
-    return this.amcModel.findById(id).exec();
+
+  findOne(id: string, tenantId: string) {
+    return this.amcModel.findOne({ _id: id, tenantId }).exec();
   }
 
-  update(id: string, updateAmcDto: UpdateAmcDto) {
-    return this.amcModel.findByIdAndUpdate(id, updateAmcDto, { new: true }).exec();
+
+  update(id: string, updateAmcDto: UpdateAmcDto, tenantId: string) {
+    return this.amcModel.findOneAndUpdate({ _id: id, tenantId }, updateAmcDto, { new: true }).exec();
   }
 
-  remove(id: string) {
-    return this.amcModel.findByIdAndDelete(id).exec();
+
+  remove(id: string, tenantId: string) {
+    return this.amcModel.findOneAndDelete({ _id: id, tenantId }).exec();
   }
 
-  findByClient(clientId: string) {
-    return this.amcModel.find({ clientId }).exec();
+
+  findByClient(clientId: string, tenantId: string) {
+    return this.amcModel.find({ clientId, tenantId }).exec();
   }
 
-  findByStatus(status: string) {
-    return this.amcModel.find({ status }).exec();
+
+  findByStatus(status: string, tenantId: string) {
+    return this.amcModel.find({ status, tenantId }).exec();
   }
 }

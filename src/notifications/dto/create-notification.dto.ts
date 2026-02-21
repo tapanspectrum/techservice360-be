@@ -14,6 +14,8 @@ export enum NotificationStatus {
 }
 
 export class CreateNotificationDto {
+  @IsString()
+  tenantId: string;
   @IsEnum(NotificationType)
   type: NotificationType;
 

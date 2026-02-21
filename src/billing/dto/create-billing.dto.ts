@@ -10,6 +10,8 @@ export enum BillingStatus {
 
 export class CreateBillingDto {
   @IsString()
+  tenantId: string;
+  @IsString()
   invoiceNumber: string;
 
   @IsString()

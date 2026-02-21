@@ -17,6 +17,7 @@ export enum TicketStatus {
 
 @Schema({ timestamps: true })
 export class Ticket extends Document {
+  tenantId: string;
   title: string;
   description: string;
   clientId?: string;

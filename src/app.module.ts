@@ -25,6 +25,11 @@ import { ProjectsModule } from './projects/projects.module';
 import { InventoryModule } from './inventory/inventory.module';
 import { BillingModule } from './billing/billing.module';
 import { NotificationsModule } from './notifications/notifications.module';
+import { ReportsModule } from './reports/reports.module';
+import { SuppliersModule } from './suppliers/suppliers.module';
+import { RepairsModule } from './repairs/repairs.module';
+import { CctvModule } from './cctv/cctv.module';
+import { DashboardModule } from './dashboard/dashboard.module';
 
 @Module({
   imports: [
@@ -66,7 +71,12 @@ import { NotificationsModule } from './notifications/notifications.module';
     ProjectsModule,
     InventoryModule,
     BillingModule,
-    NotificationsModule
+    NotificationsModule,
+    ReportsModule,
+    SuppliersModule,
+    RepairsModule,
+    CctvModule,
+    DashboardModule
   ],
   controllers: [AppController, HealthController],
   providers: [AppService, RolesGuard, MembershipExpiryTask, HealthService],

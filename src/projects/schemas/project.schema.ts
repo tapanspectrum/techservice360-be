@@ -11,6 +11,7 @@ export enum ProjectStatus {
 
 @Schema({ timestamps: true })
 export class Project extends Document {
+  tenantId: string;
   name: string;
   description: string;
   clientId: string;

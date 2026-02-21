@@ -1,6 +1,10 @@
 import { IsString, IsEmail, IsOptional, IsPhoneNumber } from 'class-validator';
 
 export class CreateClientDto {
+  role?: string;
+  password?: string;
+  @IsString()
+  tenantId: string;
   @IsString()
   name: string;
 

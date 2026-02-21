@@ -18,9 +18,20 @@ export class AuthController {
   ) {}
 
   @Post('register')
-  async register(@Body() createUserDto: CreateUserDto) {
+  async register(@Body() createUserDto: CreateUserDto, @Res() res: Response) {
     console.log('createUserDto', createUserDto);
-    return this.authService.register(createUserDto);
+    try {
+      const result = await this.authService.register(createUserDto);
+      return res.status(201).json(result);
+    } catch (error) {
+      if (
+        error?.message === 'tenantId is required unless role is admin' ||
+        error?.toString().includes('tenantId is required unless role is admin')
+      ) {
+        return res.status(403).json({ message: error.message });
+      }
+      throw error;
+    }
   }
 
   @Post('login')

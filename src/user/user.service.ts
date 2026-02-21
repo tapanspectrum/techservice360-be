@@ -11,23 +11,34 @@ export class UserService {
   constructor(
     @InjectModel(User.name) private userModel: Model<UserDocument>
   ) { }
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+
+
+  async create(createUserDto: CreateUserDto, userRole?: string) {
+    if (userRole !== 'admin' && !createUserDto.tenantId) throw new Error('tenantId is required');
+    return this.userModel.create(createUserDto);
   }
 
-  findAll(): Promise<any> {
-    return this.userModel.find({});
-  }
 
-  async findOne(id: string): Promise<any> {
-    const user = await this.userModel.findOne({ _id: id }).lean(); // ✅ await added
 
-    console.log('user', user);
-
-    if (!user) {
-      throw new NotFoundException('User not found'); // Now this will correctly trigger
+  findAll(tenantId: string, userRole?: string): Promise<any> {
+    if (userRole === 'admin') {
+      return this.userModel.find({});
     }
+    return this.userModel.find({ tenantId });
+  }
 
+
+
+  async findOne(id: string, tenantId: string, userRole?: string): Promise<any> {
+    let user;
+    if (userRole === 'admin') {
+      user = await this.userModel.findById(id).lean();
+    } else {
+      user = await this.userModel.findOne({ _id: id, tenantId }).lean();
+    }
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
     return user;
   }
 
@@ -41,7 +52,7 @@ export class UserService {
   //   return user;
   // }
 
-  async update(id: string, updateUserDto: UpdateUserDto) {
+  async update(id: string, updateUserDto: UpdateUserDto, tenantId: string, userRole?: string) {
     // 🧠 If membership is upgraded, auto-assign expiry
     if (updateUserDto.membership) {
       const membership = updateUserDto.membership.toLowerCase();
@@ -69,24 +80,35 @@ export class UserService {
       }
     }
 
-    const user = await this.userModel.findByIdAndUpdate(id, updateUserDto, {
-      new: true,
-    });
 
+
+    let user;
+    if (userRole === 'admin') {
+      user = await this.userModel.findByIdAndUpdate(id, updateUserDto, { new: true });
+    } else {
+      user = await this.userModel.findOneAndUpdate(
+        { _id: id, tenantId },
+        updateUserDto,
+        { new: true }
+      );
+    }
     if (!user) {
       throw new NotFoundException(`User with ID ${id} not found`);
     }
-
     return user;
   }
 
-  async remove(id: string) {
-    const user = await this.userModel.findByIdAndDelete(id);
 
+  async remove(id: string, tenantId: string, userRole?: string) {
+    let user;
+    if (userRole === 'admin') {
+      user = await this.userModel.findByIdAndDelete(id);
+    } else {
+      user = await this.userModel.findOneAndDelete({ _id: id, tenantId });
+    }
     if (!user) {
       throw new NotFoundException(`User with ID ${id} not found`);
     }
-
     return user;
   }
 }

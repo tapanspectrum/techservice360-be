@@ -11,6 +11,7 @@ export enum BillingStatus {
 
 @Schema({ timestamps: true })
 export class Billing extends Document {
+  tenantId: string;
   invoiceNumber: string;
   clientId: string;
   projectId?: string;

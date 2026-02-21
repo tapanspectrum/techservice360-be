@@ -1,4 +1,5 @@
-import { IsString, IsOptional, IsNumber, IsEnum, IsDate } from 'class-validator';
+import { IsString, IsEnum, IsNumber, IsMongoId } from 'class-validator';
+
 
 export enum InventoryStatus {
   IN_STOCK = 'in_stock',
@@ -7,39 +8,31 @@ export enum InventoryStatus {
   DISCONTINUED = 'discontinued',
 }
 
+export enum InventoryCategory {
+  CCTV = 'cctv',
+  HARDWARE = 'hardware',
+  SPARE = 'spare',
+}
+
+
 export class CreateInventoryDto {
   @IsString()
-  itemName: string;
-
+  tenantId: string;
   @IsString()
-  sku: string;
+  productName: string;
+
+  @IsEnum(InventoryCategory)
+  category: InventoryCategory;
 
   @IsNumber()
-  quantity: number;
+  purchasePrice: number;
 
   @IsNumber()
-  unitCost: number;
+  sellingPrice: number;
 
-  @IsEnum(InventoryStatus)
-  status: InventoryStatus;
-
-  @IsOptional()
-  @IsString()
-  category?: string;
-
-  @IsOptional()
-  @IsString()
-  location?: string;
-
-  @IsOptional()
-  @IsString()
-  supplier?: string;
-
-  @IsOptional()
-  @IsDate()
-  lastRestocked?: Date;
-
-  @IsOptional()
   @IsNumber()
-  reorderLevel?: number;
+  stock: number;
+
+  @IsMongoId()
+  supplierId: string;
 }

@@ -9,33 +9,41 @@ import { Notification } from './schemas/notification.schema';
 export class NotificationsService {
   constructor(@InjectModel(Notification.name) private notificationModel: Model<Notification>) {}
 
+
   create(createNotificationDto: CreateNotificationDto) {
+    if (!createNotificationDto.tenantId) throw new Error('tenantId is required');
     const createdNotification = new this.notificationModel(createNotificationDto);
     return createdNotification.save();
   }
 
-  findAll() {
-    return this.notificationModel.find().exec();
+
+  findAll(tenantId: string) {
+    return this.notificationModel.find({ tenantId }).exec();
   }
 
-  findOne(id: string) {
-    return this.notificationModel.findById(id).exec();
+
+  findOne(id: string, tenantId: string) {
+    return this.notificationModel.findOne({ _id: id, tenantId }).exec();
   }
 
-  update(id: string, updateNotificationDto: UpdateNotificationDto) {
-    return this.notificationModel.findByIdAndUpdate(id, updateNotificationDto, { new: true }).exec();
+
+  update(id: string, updateNotificationDto: UpdateNotificationDto, tenantId: string) {
+    return this.notificationModel.findOneAndUpdate({ _id: id, tenantId }, updateNotificationDto, { new: true }).exec();
   }
 
-  remove(id: string) {
-    return this.notificationModel.findByIdAndDelete(id).exec();
+
+  remove(id: string, tenantId: string) {
+    return this.notificationModel.findOneAndDelete({ _id: id, tenantId }).exec();
   }
 
-  findByStatus(status: string) {
-    return this.notificationModel.find({ status }).exec();
+
+  findByStatus(status: string, tenantId: string) {
+    return this.notificationModel.find({ status, tenantId }).exec();
   }
 
-  findByType(type: string) {
-    return this.notificationModel.find({ type }).exec();
+
+  findByType(type: string, tenantId: string) {
+    return this.notificationModel.find({ type, tenantId }).exec();
   }
 
   findByClient(clientId: string) {

@@ -1,5 +1,5 @@
-import { Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document, Types } from 'mongoose';
 
 export enum InventoryStatus {
   IN_STOCK = 'in_stock',
@@ -10,16 +10,25 @@ export enum InventoryStatus {
 
 @Schema({ timestamps: true })
 export class Inventory extends Document {
-  itemName: string;
-  sku: string;
-  quantity: number;
-  unitCost: number;
-  status: InventoryStatus;
-  category?: string;
-  location?: string;
-  supplier?: string;
-  lastRestocked?: Date;
-  reorderLevel?: number;
+  @Prop({ required: true, index: true })
+  tenantId: string;
+  @Prop({ required: true })
+  productName: string;
+
+  @Prop({ required: true, enum: ['cctv', 'hardware', 'spare'] })
+  category: 'cctv' | 'hardware' | 'spare';
+
+  @Prop({ required: true })
+  purchasePrice: number;
+
+  @Prop({ required: true })
+  sellingPrice: number;
+
+  @Prop({ required: true })
+  stock: number;
+
+  @Prop({ type: Types.ObjectId, required: true, ref: 'Supplier' })
+  supplierId: Types.ObjectId;
 }
 
 export const InventorySchema = SchemaFactory.createForClass(Inventory);

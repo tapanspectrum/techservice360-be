@@ -7,34 +7,64 @@ import { Ticket } from './schemas/ticket.schema';
 
 @Injectable()
 export class TicketsService {
-  constructor(@InjectModel(Ticket.name) private ticketModel: Model<Ticket>) {}
+  constructor(@InjectModel(Ticket.name) private readonly ticketModel: Model<Ticket>) {}
 
-  create(createTicketDto: CreateTicketDto) {
+  get model() {
+    return this.ticketModel;
+  }
+
+
+  create(createTicketDto: CreateTicketDto, userRole?: string) {
+    if (userRole !== 'admin' && !createTicketDto.tenantId) throw new Error('tenantId is required');
     const createdTicket = new this.ticketModel(createTicketDto);
     return createdTicket.save();
   }
 
-  findAll() {
-    return this.ticketModel.find().exec();
+
+  findAll(tenantId: string, userRole?: string) {
+    if (userRole === 'admin') {
+      return this.ticketModel.find().exec();
+    }
+    return this.ticketModel.find({ tenantId }).exec();
   }
 
-  findOne(id: string) {
-    return this.ticketModel.findById(id).exec();
+
+  findOne(id: string, tenantId: string, userRole?: string) {
+    if (userRole === 'admin') {
+      return this.ticketModel.findOne({ _id: id }).exec();
+    }
+    return this.ticketModel.findOne({ _id: id, tenantId }).exec();
   }
 
-  update(id: string, updateTicketDto: UpdateTicketDto) {
-    return this.ticketModel.findByIdAndUpdate(id, updateTicketDto, { new: true }).exec();
+
+  update(id: string, updateTicketDto: UpdateTicketDto, tenantId: string, userRole?: string) {
+    if (userRole === 'admin') {
+      return this.ticketModel.findOneAndUpdate({ _id: id }, updateTicketDto, { new: true }).exec();
+    }
+    return this.ticketModel.findOneAndUpdate({ _id: id, tenantId }, updateTicketDto, { new: true }).exec();
   }
 
-  remove(id: string) {
-    return this.ticketModel.findByIdAndDelete(id).exec();
+
+  remove(id: string, tenantId: string, userRole?: string) {
+    if (userRole === 'admin') {
+      return this.ticketModel.findOneAndDelete({ _id: id }).exec();
+    }
+    return this.ticketModel.findOneAndDelete({ _id: id, tenantId }).exec();
   }
 
-  findByClient(clientId: string) {
-    return this.ticketModel.find({ clientId }).exec();
+
+  findByClient(clientId: string, tenantId: string, userRole?: string) {
+    if (userRole === 'admin') {
+      return this.ticketModel.find({ clientId }).exec();
+    }
+    return this.ticketModel.find({ clientId, tenantId }).exec();
   }
 
-  findByStatus(status: string) {
-    return this.ticketModel.find({ status }).exec();
+
+  findByStatus(status: string, tenantId: string, userRole?: string) {
+    if (userRole === 'admin') {
+      return this.ticketModel.find({ status }).exec();
+    }
+    return this.ticketModel.find({ status, tenantId }).exec();
   }
 }

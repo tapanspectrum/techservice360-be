@@ -16,6 +16,8 @@ export enum TicketStatus {
 
 export class CreateTicketDto {
   @IsString()
+  tenantId: string;
+  @IsString()
   title: string;
 
   @IsString()

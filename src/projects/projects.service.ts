@@ -9,33 +9,41 @@ import { Project } from './schemas/project.schema';
 export class ProjectsService {
   constructor(@InjectModel(Project.name) private projectModel: Model<Project>) {}
 
+
   create(createProjectDto: CreateProjectDto) {
+    if (!createProjectDto.tenantId) throw new Error('tenantId is required');
     const createdProject = new this.projectModel(createProjectDto);
     return createdProject.save();
   }
 
-  findAll() {
-    return this.projectModel.find().exec();
+
+  findAll(tenantId: string) {
+    return this.projectModel.find({ tenantId }).exec();
   }
 
-  findOne(id: string) {
-    return this.projectModel.findById(id).exec();
+
+  findOne(id: string, tenantId: string) {
+    return this.projectModel.findOne({ _id: id, tenantId }).exec();
   }
 
-  update(id: string, updateProjectDto: UpdateProjectDto) {
-    return this.projectModel.findByIdAndUpdate(id, updateProjectDto, { new: true }).exec();
+
+  update(id: string, updateProjectDto: UpdateProjectDto, tenantId: string) {
+    return this.projectModel.findOneAndUpdate({ _id: id, tenantId }, updateProjectDto, { new: true }).exec();
   }
 
-  remove(id: string) {
-    return this.projectModel.findByIdAndDelete(id).exec();
+
+  remove(id: string, tenantId: string) {
+    return this.projectModel.findOneAndDelete({ _id: id, tenantId }).exec();
   }
 
-  findByClient(clientId: string) {
-    return this.projectModel.find({ clientId }).exec();
+
+  findByClient(clientId: string, tenantId: string) {
+    return this.projectModel.find({ clientId, tenantId }).exec();
   }
 
-  findByStatus(status: string) {
-    return this.projectModel.find({ status }).exec();
+
+  findByStatus(status: string, tenantId: string) {
+    return this.projectModel.find({ status, tenantId }).exec();
   }
 
   findByManager(manager: string) {

@@ -3,6 +3,8 @@ import { IsString, IsEmail, IsOptional, IsEnum, MinLength, MaxLength, IsArray, A
 
 export class CreateUserDto {
   @IsString()
+  tenantId: string;
+  @IsString()
   readonly name: string;
 
   @IsEmail()
