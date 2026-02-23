@@ -1,12 +1,5 @@
 import { Document } from 'mongoose';
-
-export enum BillingStatus {
-  DRAFT = 'draft',
-  SENT = 'sent',
-  PAID = 'paid',
-  OVERDUE = 'overdue',
-  CANCELLED = 'cancelled',
-}
+import { BillingStatus } from '../billing.constants';
 
 export interface IBilling extends Document {
   invoiceNumber: string;

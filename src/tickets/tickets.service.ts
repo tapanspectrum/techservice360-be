@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateTicketDto } from './dto/create-ticket.dto';
@@ -15,7 +15,7 @@ export class TicketsService {
 
 
   create(createTicketDto: CreateTicketDto, userRole?: string) {
-    if (userRole !== 'admin' && !createTicketDto.tenantId) throw new Error('tenantId is required');
+    if (userRole !== 'admin' && !createTicketDto.tenantId) throw new BadRequestException('tenantId is required');
     const createdTicket = new this.ticketModel(createTicketDto);
     return createdTicket.save();
   }

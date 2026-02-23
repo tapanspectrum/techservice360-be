@@ -1,23 +1,16 @@
 import { Document } from 'mongoose';
-
-export enum InventoryStatus {
-  IN_STOCK = 'in_stock',
-  LOW_STOCK = 'low_stock',
-  OUT_OF_STOCK = 'out_of_stock',
-  DISCONTINUED = 'discontinued',
-}
+import { InventoryCategory, InventoryStatus } from '../inventory.constants';
 
 export interface IInventory extends Document {
-  itemName: string;
-  sku: string;
-  quantity: number;
-  unitCost: number;
+  tenantId: string;
+  sku?: string;
+  productName: string;
+  purchasePrice: number;
+  sellingPrice: number;
+  stock: number;
   status: InventoryStatus;
-  category?: string;
-  location?: string;
-  supplier?: string;
-  lastRestocked?: Date;
-  reorderLevel?: number;
+  category: InventoryCategory;
+  supplierId: string;
   createdAt?: Date;
   updatedAt?: Date;
 }

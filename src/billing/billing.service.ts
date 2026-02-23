@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateBillingDto } from './dto/create-billing.dto';
@@ -15,7 +15,7 @@ export class BillingService {
 
 
   create(createBillingDto: CreateBillingDto) {
-    if (!createBillingDto.tenantId) throw new Error('tenantId is required');
+    if (!createBillingDto.tenantId) throw new BadRequestException('tenantId is required');
     const createdBilling = new this.billingModel(createBillingDto);
     return createdBilling.save();
   }

@@ -1,0 +1,230 @@
+{
+  "info": {
+    "name": "TechService360 - Clients Module",
+    "_postman_id": "4dbe9ee0-f225-4f87-987f-305c4f844f77",
+    "description": "Client module API collection with nature-based payloads.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:4004" },
+    { "key": "apiPrefix", "value": "api/v1" },
+    { "key": "token", "value": "" },
+    { "key": "tenantId", "value": "tenant1" },
+    { "key": "clientId", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Clients - Create (Shop)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" },
+          { "key": "Content-Type", "value": "application/json", "type": "text" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"tenantId\": \"{{tenantId}}\",\n  \"name\": \"ABC Electronics\",\n  \"email\": \"shop@example.com\",\n  \"phone\": \"+919999999999\",\n  \"nature\": \"shop\",\n  \"natureDetails\": {\n    \"shopName\": \"ABC Store\",\n    \"shopType\": \"electronics\"\n  }\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/{{apiPrefix}}/clients",
+          "host": ["{{baseUrl}}"],
+          "path": ["{{apiPrefix}}", "clients"]
+        }
+      }
+    },
+    {
+      "name": "Clients - Create (Company)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" },
+          { "key": "Content-Type", "value": "application/json", "type": "text" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"tenantId\": \"{{tenantId}}\",\n  \"name\": \"ABC Pvt Ltd\",\n  \"email\": \"company@example.com\",\n  \"phone\": \"+918888888888\",\n  \"nature\": \"company\",\n  \"natureDetails\": {\n    \"companyName\": \"ABC Pvt Ltd\",\n    \"registrationNumber\": \"CIN12345\"\n  }\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/{{apiPrefix}}/clients",
+          "host": ["{{baseUrl}}"],
+          "path": ["{{apiPrefix}}", "clients"]
+        }
+      }
+    },
+    {
+      "name": "Clients - Create (Homestay)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" },
+          { "key": "Content-Type", "value": "application/json", "type": "text" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"tenantId\": \"{{tenantId}}\",\n  \"name\": \"Green Valley Stay\",\n  \"email\": \"homestay@example.com\",\n  \"phone\": \"+917777777777\",\n  \"nature\": \"homestay\",\n  \"natureDetails\": {\n    \"contactPerson\": \"Ravi\",\n    \"roomCount\": 4\n  }\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/{{apiPrefix}}/clients",
+          "host": ["{{baseUrl}}"],
+          "path": ["{{apiPrefix}}", "clients"]
+        }
+      }
+    },
+    {
+      "name": "Clients - Create (Lodge)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" },
+          { "key": "Content-Type", "value": "application/json", "type": "text" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"tenantId\": \"{{tenantId}}\",\n  \"name\": \"City Lodge\",\n  \"email\": \"lodge@example.com\",\n  \"phone\": \"+916666666666\",\n  \"nature\": \"lodge\",\n  \"natureDetails\": {\n    \"contactPerson\": \"Suresh\",\n    \"roomCount\": 20\n  }\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/{{apiPrefix}}/clients",
+          "host": ["{{baseUrl}}"],
+          "path": ["{{apiPrefix}}", "clients"]
+        }
+      }
+    },
+    {
+      "name": "Clients - Create (Restaurant)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" },
+          { "key": "Content-Type", "value": "application/json", "type": "text" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"tenantId\": \"{{tenantId}}\",\n  \"name\": \"Spice Hub\",\n  \"email\": \"restaurant@example.com\",\n  \"phone\": \"+915555555555\",\n  \"nature\": \"restaurant\",\n  \"natureDetails\": {\n    \"contactPerson\": \"Aman\",\n    \"seatingCapacity\": 80,\n    \"cuisineType\": \"multi-cuisine\"\n  }\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/{{apiPrefix}}/clients",
+          "host": ["{{baseUrl}}"],
+          "path": ["{{apiPrefix}}", "clients"]
+        }
+      }
+    },
+    {
+      "name": "Clients - Create (Hotel)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" },
+          { "key": "Content-Type", "value": "application/json", "type": "text" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"tenantId\": \"{{tenantId}}\",\n  \"name\": \"Grand Hotel\",\n  \"email\": \"hotel@example.com\",\n  \"phone\": \"+914444444444\",\n  \"nature\": \"hotel\",\n  \"natureDetails\": {\n    \"contactPerson\": \"Neha\",\n    \"starRating\": 4,\n    \"roomCount\": 60\n  }\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/{{apiPrefix}}/clients",
+          "host": ["{{baseUrl}}"],
+          "path": ["{{apiPrefix}}", "clients"]
+        }
+      }
+    },
+    {
+      "name": "Clients - Create (Home)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" },
+          { "key": "Content-Type", "value": "application/json", "type": "text" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"tenantId\": \"{{tenantId}}\",\n  \"name\": \"Sharma Residence\",\n  \"email\": \"home@example.com\",\n  \"phone\": \"+913333333333\",\n  \"nature\": \"home\",\n  \"natureDetails\": {\n    \"contactPerson\": \"Family Head\"\n  }\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/{{apiPrefix}}/clients",
+          "host": ["{{baseUrl}}"],
+          "path": ["{{apiPrefix}}", "clients"]
+        }
+      }
+    },
+    {
+      "name": "Clients - Create (Bank)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" },
+          { "key": "Content-Type", "value": "application/json", "type": "text" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"tenantId\": \"{{tenantId}}\",\n  \"name\": \"ABC Bank Branch\",\n  \"email\": \"bank@example.com\",\n  \"phone\": \"+912222222222\",\n  \"nature\": \"bank\",\n  \"natureDetails\": {\n    \"branchCode\": \"BR001\",\n    \"ifscCode\": \"HDFC0001234\"\n  }\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/{{apiPrefix}}/clients",
+          "host": ["{{baseUrl}}"],
+          "path": ["{{apiPrefix}}", "clients"]
+        }
+      }
+    },
+    {
+      "name": "Clients - Get All",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/{{apiPrefix}}/clients",
+          "host": ["{{baseUrl}}"],
+          "path": ["{{apiPrefix}}", "clients"]
+        }
+      }
+    },
+    {
+      "name": "Clients - Get One",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/{{apiPrefix}}/clients/{{clientId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["{{apiPrefix}}", "clients", "{{clientId}}"]
+        }
+      }
+    },
+    {
+      "name": "Clients - Update",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" },
+          { "key": "Content-Type", "value": "application/json", "type": "text" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Updated Client Name\",\n  \"phone\": \"+911111111111\",\n  \"natureDetails\": {\n    \"contactPerson\": \"Updated Contact\"\n  }\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/{{apiPrefix}}/clients/{{clientId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["{{apiPrefix}}", "clients", "{{clientId}}"]
+        }
+      }
+    },
+    {
+      "name": "Clients - Delete",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/{{apiPrefix}}/clients/{{clientId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["{{apiPrefix}}", "clients", "{{clientId}}"]
+        }
+      }
+    }
+  ]
+}

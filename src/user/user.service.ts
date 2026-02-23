@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { JwtService } from '@nestjs/jwt';
@@ -14,7 +14,7 @@ export class UserService {
 
 
   async create(createUserDto: CreateUserDto, userRole?: string) {
-    if (userRole !== 'admin' && !createUserDto.tenantId) throw new Error('tenantId is required');
+    if (userRole !== 'admin' && !createUserDto.tenantId) throw new BadRequestException('tenantId is required');
     return this.userModel.create(createUserDto);
   }
 

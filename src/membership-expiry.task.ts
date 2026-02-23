@@ -13,7 +13,6 @@ export class MembershipExpiryTask {
 
   @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
   async handleMembershipExpiry() {
-    console.log('Running membership expiry task...');
     const now = new Date();
     const expiredUsers = await this.userModel.find({
       membershipExpiresAt: { $lte: now },

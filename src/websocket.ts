@@ -8,25 +8,13 @@ export const initWebSocket = (server: any) => {
     });
 
     io.on('connection', (socket) => {
-        console.log('a user connected', socket.id);
         socket.on('join', (userId: string) => {
-            console.log(`User ${userId} joined with socket ID: ${socket.id}`);
             socket.join(userId); // Join a room named after the userId
-        });
-
-        socket.on('disconnect', () => {
-            console.log('user disconnected', socket.id);
         });
     });
 
     // Subscribe to Redis channels
-    redisSubscriber.subscribe('notifications', (err, count) => {
-        if (err) {
-            console.error('Failed to subscribe: %s', err.message);
-        } else {
-            console.log(`Subscribed successfully! This client is currently subscribed to ${count} channels.`);
-        }
-    });
+    redisSubscriber.subscribe('notifications');
 
     // Listen for messages from Redis and emit to WebSocket clients
     redisSubscriber.on('message', (channel, message) => {

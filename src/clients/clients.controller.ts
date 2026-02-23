@@ -25,7 +25,6 @@ export class ClientsController {
   @UseGuards(AuthGuard('jwt'))
   @Get()
   findAll(@Req() req) {
-    console.log('Finding all clients for tenant:', req);
     const userRole = req.user?.role;
     const tenantId = userRole !== 'admin' ? req.tenantId : null;
     return this.clientsService.findAll(tenantId, userRole);
@@ -35,7 +34,6 @@ export class ClientsController {
   @UseGuards(AuthGuard('jwt'))
   @Get(':id')
   findOne(@Param('id') id: string, @Req() req) {
-    console.log('Finding client with ID:', id, 'for tenant:', req.tenantId);
     const userRole = req.user?.role;
     const tenantId = userRole !== 'admin' ? req.tenantId : null;
     return this.clientsService.findOne(id, tenantId, userRole);

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateAmcDto } from './dto/create-amc.dto';
@@ -15,7 +15,7 @@ export class AmcService {
 
 
   create(createAmcDto: CreateAmcDto) {
-    if (!createAmcDto.tenantId) throw new Error('tenantId is required');
+    if (!createAmcDto.tenantId) throw new BadRequestException('tenantId is required');
     const createdAmc = new this.amcModel(createAmcDto);
     return createdAmc.save();
   }

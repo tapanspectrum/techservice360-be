@@ -1,4 +1,4 @@
-import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
+import { Injectable, CanActivate, ExecutionContext, UnauthorizedException } from '@nestjs/common';
 import { Request } from 'express';
 
 // Extend Express Request type to include user and tenantId
@@ -15,7 +15,6 @@ export class TenantGuard implements CanActivate {
     const request = context.switchToHttp().getRequest<Request>();
     // Try to extract tenantId from JWT payload or header
     const user = request.user as any;
-    console.log('TenantGuard - User:', user);
     // If user is admin, skip tenantId check
     if (user && user.role === 'admin') {
       request.tenantId = undefined;
@@ -26,7 +25,7 @@ export class TenantGuard implements CanActivate {
       tenantId = request.headers['x-tenant-id'] as string;
     }
     if (!tenantId) {
-      throw new Error('tenantId not found in user or headers');
+      throw new UnauthorizedException('tenantId not found in user or headers');
     }
     // Attach tenantId to request for controllers/services
     request.tenantId = tenantId;

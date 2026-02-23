@@ -122,9 +122,7 @@ async function seed() {
     status: ['installed', 'pending'][i % 2],
   })));
 
-
-  console.log('Dummy data inserted for all collections!');
   await mongoose.disconnect();
 }
 
-seed().catch(e => { console.error(e); process.exit(1); });
+seed().catch(() => { process.exit(1); });

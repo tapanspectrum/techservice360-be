@@ -44,7 +44,6 @@ export class AuthService {
         msg: "Registration successful! Please verify your email.",
       };
     } catch (error) {
-      console.error("Registration error:", error);
       throw error;
     }
   }
@@ -52,7 +51,6 @@ export class AuthService {
   async login(loginUserDto: LoginUserDto): Promise<any> {
     const user = await this.userModel.findOne({ email: loginUserDto.email });
     if (!user) throw new UnauthorizedException("Invalid credentials");
-    console.log("user", user);
     const isMatch = await user.matchPassword(loginUserDto.password);
     if (!isMatch) throw new UnauthorizedException("Invalid credentials");
 

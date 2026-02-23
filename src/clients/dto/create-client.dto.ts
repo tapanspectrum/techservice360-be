@@ -1,40 +1,27 @@
-import { IsString, IsEmail, IsOptional, IsPhoneNumber } from 'class-validator';
+import { IsString, IsEmail, IsOptional, IsPhoneNumber, IsMongoId, IsIn } from 'class-validator';
 
 export class CreateClientDto {
-  role?: string;
-  password?: string;
-  @IsString()
-  tenantId: string;
+  @IsOptional()
+  tenantId?: string;
+
   @IsString()
   name: string;
 
   @IsEmail()
   email: string;
 
-  @IsPhoneNumber()
-  phone: string;
-
-  @IsOptional()
   @IsString()
-  companyName?: string;
+  phone: string;
 
   @IsOptional()
   @IsString()
   address?: string;
 
   @IsOptional()
-  @IsString()
-  city?: string;
+  @IsIn(['office', 'pg', 'shop', 'apartment'])
+  type?: 'office' | 'pg' | 'shop' | 'apartment';
 
   @IsOptional()
   @IsString()
-  state?: string;
-
-  @IsOptional()
-  @IsString()
-  pincode?: string;
-
-  @IsOptional()
-  @IsString()
-  industry?: string;
+  createdby?: string;
 }

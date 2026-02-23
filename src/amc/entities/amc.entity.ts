@@ -1,11 +1,5 @@
 import { Document } from 'mongoose';
-
-export enum AMCStatus {
-  ACTIVE = 'active',
-  EXPIRED = 'expired',
-  PENDING = 'pending',
-  CANCELLED = 'cancelled',
-}
+import { AMCStatus } from '../amc.constants';
 
 export interface IAMC extends Document {
   clientId: string;

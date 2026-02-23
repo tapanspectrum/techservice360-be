@@ -4,7 +4,6 @@ import { Message } from "./email.interfaces";
 import { createLogger } from "../../loggers/logger.config";
 import * as path from "path";
 import * as ejs from "ejs";
-import fs from "fs";
 
 export const transport = nodemailer.createTransport(config.email.smtp);
 /* istanbul ignore next */
@@ -96,8 +95,6 @@ export const sendVerificationEmail = async (
     process.cwd(),
     "src/utils/email-templates/verify-email.ejs"
   );
-  console.log("Resolved template path:", templatePath);
-  console.log("Sending verification email to:", name, verificationEmailUrl);
   // ✅ Render HTML using EJS
   const html = await ejs.renderFile(templatePath, {
     name,

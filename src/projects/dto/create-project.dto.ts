@@ -1,12 +1,5 @@
 import { IsString, IsOptional, IsDate, IsNumber, IsEnum, IsArray } from 'class-validator';
-
-export enum ProjectStatus {
-  PLANNING = 'planning',
-  IN_PROGRESS = 'in_progress',
-  ON_HOLD = 'on_hold',
-  COMPLETED = 'completed',
-  CANCELLED = 'cancelled',
-}
+import { ProjectStatus } from '../projects.constants';
 
 export class CreateProjectDto {
   @IsString()

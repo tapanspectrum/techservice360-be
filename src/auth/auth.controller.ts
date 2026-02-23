@@ -19,7 +19,6 @@ export class AuthController {
 
   @Post('register')
   async register(@Body() createUserDto: CreateUserDto, @Res() res: Response) {
-    console.log('createUserDto', createUserDto);
     try {
       const result = await this.authService.register(createUserDto);
       return res.status(201).json(result);
@@ -38,7 +37,6 @@ export class AuthController {
   @HttpCode(200)
   async login(@Body() loginUserDto: LoginUserDto, @Res({ passthrough: true }) res: Response) {
     const accessToken = await this.authService.login(loginUserDto);
-    console.log('accessToken', accessToken?.token);
     res.cookie('access_token', accessToken?.token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',

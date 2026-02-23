@@ -1,12 +1,5 @@
 import { Document } from 'mongoose';
-
-export enum ProjectStatus {
-  PLANNING = 'planning',
-  IN_PROGRESS = 'in_progress',
-  ON_HOLD = 'on_hold',
-  COMPLETED = 'completed',
-  CANCELLED = 'cancelled',
-}
+import { ProjectStatus } from '../projects.constants';
 
 export interface IProject extends Document {
   name: string;

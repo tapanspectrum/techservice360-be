@@ -24,18 +24,3 @@ export const redisSubscriber = new Redis({
         return Math.min(times * 2000, 10000);
     },
 });
-
-// ✅ Handle error events
-[redisClient, redisSubscriber].forEach((client, i) => {
-  client.on('error', (err) => {
-    console.error(`[Redis ${i === 0 ? 'Client' : 'Subscriber'} Error]:`, err.message);
-  });
-
-  client.on('connect', () => {
-    console.log(`[Redis ${i === 0 ? 'Client' : 'Subscriber'}] Connected`);
-  });
-
-  client.on('reconnecting', () => {
-    console.warn(`[Redis ${i === 0 ? 'Client' : 'Subscriber'}] Reconnecting...`);
-  });
-});

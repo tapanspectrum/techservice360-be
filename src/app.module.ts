@@ -30,6 +30,7 @@ import { SuppliersModule } from './suppliers/suppliers.module';
 import { RepairsModule } from './repairs/repairs.module';
 import { CctvModule } from './cctv/cctv.module';
 import { DashboardModule } from './dashboard/dashboard.module';
+import { TenantModule } from './tenant/tenant.module';
 
 @Module({
   imports: [
@@ -76,7 +77,8 @@ import { DashboardModule } from './dashboard/dashboard.module';
     SuppliersModule,
     RepairsModule,
     CctvModule,
-    DashboardModule
+    DashboardModule,
+    TenantModule
   ],
   controllers: [AppController, HealthController],
   providers: [AppService, RolesGuard, MembershipExpiryTask, HealthService],

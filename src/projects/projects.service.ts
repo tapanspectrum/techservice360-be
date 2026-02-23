@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateProjectDto } from './dto/create-project.dto';
@@ -11,7 +11,7 @@ export class ProjectsService {
 
 
   create(createProjectDto: CreateProjectDto) {
-    if (!createProjectDto.tenantId) throw new Error('tenantId is required');
+    if (!createProjectDto.tenantId) throw new BadRequestException('tenantId is required');
     const createdProject = new this.projectModel(createProjectDto);
     return createdProject.save();
   }

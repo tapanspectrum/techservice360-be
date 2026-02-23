@@ -2,10 +2,15 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
 @Schema({ timestamps: true })
-export class Dashboard extends Document {
+export class Dashboard {
   @Prop({ required: true })
   title: string;
   @Prop({ required: true, index: true })
+  tenantId: string;
+}
+
+export interface DashboardDocument extends Document {
+  title: string;
   tenantId: string;
 }
 

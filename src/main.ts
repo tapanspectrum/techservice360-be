@@ -65,11 +65,9 @@ async function bootstrap() {
 
   // Start Nest server
   const server = await app.listen(port);
-  console.log(`🚀 Server running on http://localhost:${port}`);
 
   // ✅ Initialize WebSocket after Nest starts
-  const io = initWebSocket(server);
-  console.log('🔌 WebSocket server initialized');
+  initWebSocket(server);
 }
 
 bootstrap();

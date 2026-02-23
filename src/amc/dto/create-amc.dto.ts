@@ -1,15 +1,8 @@
-export type PlanType = 'home' | '5pc' | '10pc' | '20pc';
 import { IsString, IsOptional, IsDate, IsNumber, IsEnum } from 'class-validator';
-
-export enum AMCStatus {
-  ACTIVE = 'active',
-  EXPIRED = 'expired',
-  PENDING = 'pending',
-  CANCELLED = 'cancelled',
-}
+import { AmcPlanType, AMCStatus, PlanType } from '../amc.constants';
 
 export class CreateAmcDto {
-  @IsEnum(['home', '5pc', '10pc', '20pc'])
+  @IsEnum(AmcPlanType)
   planType: PlanType;
   @IsString()
   tenantId: string;

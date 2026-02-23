@@ -1,17 +1,5 @@
 import { IsString, IsOptional, IsEnum, IsPhoneNumber, IsArray } from 'class-validator';
-
-export enum NotificationType {
-  SMS = 'sms',
-  WHATSAPP = 'whatsapp',
-  EMAIL = 'email',
-}
-
-export enum NotificationStatus {
-  PENDING = 'pending',
-  SENT = 'sent',
-  FAILED = 'failed',
-  DELIVERED = 'delivered',
-}
+import { NotificationStatus, NotificationType } from '../notifications.constants';
 
 export class CreateNotificationDto {
   @IsString()

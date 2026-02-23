@@ -1,17 +1,5 @@
 import { Document } from 'mongoose';
-
-export enum NotificationType {
-  SMS = 'sms',
-  WHATSAPP = 'whatsapp',
-  EMAIL = 'email',
-}
-
-export enum NotificationStatus {
-  PENDING = 'pending',
-  SENT = 'sent',
-  FAILED = 'failed',
-  DELIVERED = 'delivered',
-}
+import { NotificationStatus, NotificationType } from '../notifications.constants';
 
 export interface INotification extends Document {
   type: NotificationType;

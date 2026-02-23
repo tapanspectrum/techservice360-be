@@ -1,18 +1,9 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
-
-export enum AMCStatus {
-  ACTIVE = 'active',
-  EXPIRED = 'expired',
-  PENDING = 'pending',
-  CANCELLED = 'cancelled',
-}
-
-
-export type PlanType = 'home' | '5pc' | '10pc' | '20pc';
+import { AmcPlanType, AMCStatus, PlanType } from '../amc.constants';
 
 @Schema({ timestamps: true })
-export class Amc extends Document {
+export class Amc {
   @Prop({ required: true })
   tenantId: string;
 
@@ -37,7 +28,7 @@ export class Amc extends Document {
   @Prop({ enum: AMCStatus, required: true })
   status: AMCStatus;
 
-  @Prop({ enum: ['home', '5pc', '10pc', '20pc'], required: true })
+  @Prop({ enum: Object.values(AmcPlanType), required: true })
   planType: PlanType;
 
   @Prop()
@@ -47,4 +38,21 @@ export class Amc extends Document {
   terms?: string;
 }
 
+export interface AmcDocument extends Document {
+  tenantId: string;
+  clientId: string;
+  contractNumber: string;
+  startDate: Date;
+  endDate: Date;
+  amount: number;
+  description?: string;
+  status: AMCStatus;
+  planType: PlanType;
+  scope?: string;
+  terms?: string;
+}
+
 export const AmcSchema = SchemaFactory.createForClass(Amc);
+
+AmcSchema.index({ tenantId: 1, clientId: 1 });
+AmcSchema.index({ tenantId: 1, status: 1 });

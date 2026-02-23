@@ -3,11 +3,11 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateClientDto } from './dto/create-client.dto';
 import { UpdateClientDto } from './dto/update-client.dto';
-import { User } from '../user/schemas/user.schema';
+import { Client, ClientDocument } from './schemas/client.schema';
 
 @Injectable()
 export class ClientsService {
-  constructor(@InjectModel(User.name) private readonly clientModel: Model<User>) {}
+  constructor(@InjectModel(Client.name) private readonly clientModel: Model<ClientDocument>) {}
 
   get model() {
     return this.clientModel;
@@ -16,7 +16,6 @@ export class ClientsService {
 
 
   create(createClientDto: CreateClientDto, userRole?: string) {
-    if (userRole !== 'admin' && !createClientDto.tenantId) throw new Error('tenantId is required');
     const createdClient = new this.clientModel(createClientDto);
     return createdClient.save();
   }

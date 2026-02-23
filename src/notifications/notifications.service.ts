@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateNotificationDto } from './dto/create-notification.dto';
@@ -11,7 +11,7 @@ export class NotificationsService {
 
 
   create(createNotificationDto: CreateNotificationDto) {
-    if (!createNotificationDto.tenantId) throw new Error('tenantId is required');
+    if (!createNotificationDto.tenantId) throw new BadRequestException('tenantId is required');
     const createdNotification = new this.notificationModel(createNotificationDto);
     return createdNotification.save();
   }

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateInventoryDto } from './dto/create-inventory.dto';
@@ -15,7 +15,7 @@ export class InventoryService {
 
 
   create(createInventoryDto: CreateInventoryDto) {
-    if (!createInventoryDto.tenantId) throw new Error('tenantId is required');
+    if (!createInventoryDto.tenantId) throw new BadRequestException('tenantId is required');
     const createdInventory = new this.inventoryModel(createInventoryDto);
     return createdInventory.save();
   }
@@ -56,6 +56,6 @@ export class InventoryService {
   }
 
   updateQuantity(id: string, quantity: number) {
-    return this.inventoryModel.findByIdAndUpdate(id, { quantity }, { new: true }).exec();
+    return this.inventoryModel.findByIdAndUpdate(id, { stock: quantity }, { new: true }).exec();
   }
 }

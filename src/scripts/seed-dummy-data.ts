@@ -3,14 +3,14 @@ import { AppModule } from '../app.module';
 import { ClientsService } from '../clients/clients.service';
 import { AmcService } from '../amc/amc.service';
 import { BillingService } from '../billing/billing.service';
-import { BillingStatus } from '../billing/dto/create-billing.dto';
+import { BillingStatus } from '../billing/billing.constants';
 import { TicketsService } from '../tickets/tickets.service';
 import { InventoryService } from '../inventory/inventory.service';
 import { CctvService } from '../cctv/cctv.service';
 import { SuppliersService } from '../suppliers/suppliers.service';
-import { InventoryCategory } from '../inventory/dto/create-inventory.dto';
-import { AMCStatus } from '../amc/dto/create-amc.dto';
-import { TicketStatus, TicketPriority } from '../tickets/dto/create-ticket.dto';
+import { InventoryCategory } from '../inventory/inventory.constants';
+import { AMCStatus } from '../amc/amc.constants';
+import { TicketStatus, TicketPriority } from '../tickets/tickets.constants';
 
 async function bootstrap() {
   const app = await NestFactory.createApplicationContext(AppModule);
@@ -26,8 +26,6 @@ async function bootstrap() {
       email: `client${i}@example.com`,
       phone: `+9112345678${String(i).padStart(2, '0')}`,
       address: `${i} Main St`,
-      role: 'client',
-      password: 'Password123!',
     });
     clientDocs.push(client);
   }

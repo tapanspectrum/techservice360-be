@@ -1,18 +1,5 @@
 import { IsString, IsOptional, IsEnum, IsDate } from 'class-validator';
-
-export enum TicketPriority {
-  LOW = 'low',
-  MEDIUM = 'medium',
-  HIGH = 'high',
-  URGENT = 'urgent',
-}
-
-export enum TicketStatus {
-  OPEN = 'open',
-  IN_PROGRESS = 'in_progress',
-  RESOLVED = 'resolved',
-  CLOSED = 'closed',
-}
+import { TicketPriority, TicketStatus } from '../tickets.constants';
 
 export class CreateTicketDto {
   @IsString()
