@@ -2,8 +2,8 @@
 import { IsString, IsEmail, IsOptional, IsEnum, MinLength, MaxLength, IsArray, ArrayMinSize, ArrayMaxSize, IsNumber } from 'class-validator';
 
 export class CreateUserDto {
-  @IsString()
-  tenantId: string;
+  @IsOptional()
+  tenantId?: string;
   @IsString()
   readonly name: string;
 
@@ -25,6 +25,9 @@ export class CreateUserDto {
   @IsString()
   @IsOptional()
   readonly address?: string;
+
+  @IsOptional()
+  membership?: string;
 
   @IsOptional()
   readonly location?: {

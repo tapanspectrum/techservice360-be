@@ -5,8 +5,9 @@ import { Document, Types } from 'mongoose';
 export class Cctv {
   @Prop({ required: true })
   projectName: string;
-  @Prop({ required: true, index: true })
-  tenantId: string;
+  
+  @Prop({ type: String, required: false, index: true })
+  tenantId?: string;
 
   @Prop({ type: Types.ObjectId, required: true, ref: 'Client' })
   clientId: Types.ObjectId;

@@ -1,14 +1,14 @@
 import { Document } from 'mongoose';
-import { TicketPriority, TicketStatus } from '../tickets.constants';
+import { TicketPriority, TicketStatus, TicketType } from '../tickets.constants';
 
 export interface ITicket extends Document {
   title: string;
   description: string;
+  type: TicketType;
   clientId?: string;
   priority: TicketPriority;
   status: TicketStatus;
-  assignedTo?: string;
-  category?: string;
+  technician: string;
   createdAt?: Date;
   updatedAt?: Date;
 }

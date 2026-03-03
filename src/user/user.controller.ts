@@ -3,8 +3,10 @@ import { TenantGuard } from '../auth/tenant.guard';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { AuthGuard } from '@nestjs/passport';
 
-@UseGuards(TenantGuard)
+// @UseGuards(TenantGuard)
+@UseGuards(AuthGuard('jwt'))
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
@@ -13,6 +15,7 @@ export class UserController {
   @Post()
   create(@Body() createUserDto: CreateUserDto, @Req() req) {
     const userRole = req.user?.role;
+    console.log('User Role:', userRole);
     if (userRole !== 'admin') {
       createUserDto.tenantId = req.tenantId;
     }
@@ -24,6 +27,12 @@ export class UserController {
   findAll(@Req() req) {
     const userRole = req.user?.role;
     return this.userService.findAll(req.tenantId, userRole);
+  }
+
+  @Get('available-techs')
+  findAvailableTechs(@Req() req) {
+    const userRole = req.user?.role;
+    return this.userService.findAvailableTechs(req.tenantId, userRole);
   }
 
 

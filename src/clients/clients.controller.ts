@@ -6,20 +6,19 @@ import { UpdateClientDto } from './dto/update-client.dto';
 import { AuthGuard } from '@nestjs/passport';
 
 @UseGuards(AuthGuard('jwt'))
-// @UseGuards(TenantGuard)
 @Controller('clients')
 export class ClientsController {
-  constructor(private readonly clientsService: ClientsService) {}
-
-
+  constructor(private readonly clientsService: ClientsService) {}  
   
   @Post()
   create(@Body() createClientDto: CreateClientDto, @Req() req) {
     const userRole = req.user?.role;
+    const userId = req.user?._id || req.user?.id;
+    console.log('User Role:', userRole, 'User ID:', userId);
     if (userRole !== 'admin') {
       createClientDto.tenantId = req.tenantId;
     }
-    return this.clientsService.create(createClientDto, userRole);
+    return this.clientsService.create(createClientDto, userRole, userId);
   }
 
   @UseGuards(AuthGuard('jwt'))
@@ -44,8 +43,9 @@ export class ClientsController {
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateClientDto: UpdateClientDto, @Req() req) {
     const userRole = req.user?.role;
+    const userId = req.user?._id || req.user?.id;
     const tenantId = userRole !== 'admin' ? req.tenantId : null;
-    return this.clientsService.update(id, updateClientDto, tenantId, userRole);
+    return this.clientsService.update(id, updateClientDto, tenantId, userRole, userId);
   }
 
   @UseGuards(AuthGuard('jwt'))

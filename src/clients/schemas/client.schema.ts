@@ -3,8 +3,8 @@ import { Document, Types } from 'mongoose';
 
 @Schema({ timestamps: true })
 export class Client {
-  @Prop({ type: Types.ObjectId, ref: 'Tenant', required: false, index: true })
-  tenantId?: Types.ObjectId;
+  @Prop({ type: String, required: false, index: true })
+  tenantId?: string;
 
   @Prop({ required: true, trim: true })
   name: string;
@@ -21,18 +21,18 @@ export class Client {
   @Prop({ enum: ['office', 'pg', 'shop', 'apartment'] })
   type: string;
 
-  @Prop()
-  createdby: string;
+  @Prop({ type: Types.ObjectId, required: true, ref: 'User' })
+  createdby: Types.ObjectId;
 }
 
 export interface ClientDocument extends Document {
-  tenantId?: Types.ObjectId;
+  tenantId?: string;
   name: string;
   email: string;
   phone: string;
   address?: string;
   type?: string;
-  createdby?: string;
+  createdby?: Types.ObjectId;
 }
 
 export const ClientSchema = SchemaFactory.createForClass(Client);

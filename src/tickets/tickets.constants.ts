@@ -5,9 +5,16 @@ export enum TicketPriority {
   URGENT = 'urgent',
 }
 
+export enum TicketType {
+  PC_REPAIR = 'PC Repair',
+  NETWORK_ISSUE = 'Network Issue',
+  CCTV_ISSUE = 'CCTV Issue',
+  INSTALLATION = 'Installation',
+  AMC_VISIT = 'AMC Visit',
+}
+
 export enum TicketStatus {
-  OPEN = 'open',
-  IN_PROGRESS = 'in_progress',
-  RESOLVED = 'resolved',
-  CLOSED = 'closed',
+  OPEN = 'Open',
+  IN_PROGRESS = 'In Progress',
+  COMPLETED = 'Completed',
 }

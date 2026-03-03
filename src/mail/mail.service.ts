@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CreateMailDto } from './dto/create-mail.dto';
 import { UpdateMailDto } from './dto/update-mail.dto';
-import { sendEmail, sendContactForm } from '../utils/services/email/email.service';
 
 @Injectable()
 export class MailService {
@@ -30,6 +29,7 @@ export class MailService {
     userName: string,
     message: string,
     adId: string) {
+    const { sendContactForm } = require('../utils/services/email/email.service');
     return sendContactForm(adminEmail, userEmail, userName, message, adId);
   }
 }

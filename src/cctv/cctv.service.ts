@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Cctv } from './schemas/cctv.schema';
@@ -12,11 +12,17 @@ export class CctvService {
     return this.cctvModel;
   }
 
-  findAll(tenantId: string) {
+  findAll(tenantId: string, userRole?: string) {
+    if (userRole === 'admin') {
+      return this.cctvModel.find({}).exec();
+    }
     return this.cctvModel.find({ tenantId }).exec();
   }
 
-  create(createCctvDto: CreateCctvDto) {
+  create(createCctvDto: CreateCctvDto, userRole?: string) {
+    if (userRole !== 'admin' && !createCctvDto.tenantId) {
+      throw new BadRequestException('tenantId is required');
+    }
     return this.cctvModel.create(createCctvDto);
   }
 }

@@ -5,20 +5,32 @@ import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User, UserDocument } from './schemas/user.schema';
+import { Ticket, TicketDocument } from '../tickets/schemas/ticket.schema';
+import { TicketStatus } from '../tickets/tickets.constants';
 
 @Injectable()
 export class UserService {
   constructor(
-    @InjectModel(User.name) private userModel: Model<UserDocument>
-  ) { }
-
+    @InjectModel(User.name) private userModel: Model<UserDocument>,
+    @InjectModel(Ticket.name) private ticketModel: Model<TicketDocument>
+  ) {}
 
   async create(createUserDto: CreateUserDto, userRole?: string) {
-    if (userRole !== 'admin' && !createUserDto.tenantId) throw new BadRequestException('tenantId is required');
-    return this.userModel.create(createUserDto);
+    if (userRole !== 'admin' && !createUserDto.tenantId) {
+      throw new BadRequestException('tenantId is required');
+    }
+
+    const userDoc = new this.userModel(createUserDto);
+
+    if (userRole === 'admin') {
+      (userDoc as UserDocument & { $locals?: { skipTenantValidation?: boolean } }).$locals = {
+        ...((userDoc as UserDocument & { $locals?: { skipTenantValidation?: boolean } }).$locals || {}),
+        skipTenantValidation: true,
+      };
+    }
+
+    return userDoc.save();
   }
-
-
 
   findAll(tenantId: string, userRole?: string): Promise<any> {
     if (userRole === 'admin') {
@@ -27,7 +39,28 @@ export class UserService {
     return this.userModel.find({ tenantId });
   }
 
+  async findAvailableTechs(tenantId: string, userRole?: string): Promise<any> {
+    const activeTicketFilter: Record<string, unknown> = {
+      status: { $ne: TicketStatus.COMPLETED },
+    };
 
+    if (userRole !== 'admin') {
+      activeTicketFilter.tenantId = tenantId;
+    }
+
+    const assignedTechnicianIds = await this.ticketModel.distinct('technician', activeTicketFilter);
+
+    const userFilter: Record<string, unknown> = {
+      role: 'tech',
+      _id: { $nin: assignedTechnicianIds },
+    };
+
+    if (userRole !== 'admin') {
+      userFilter.tenantId = tenantId;
+    }
+
+    return this.userModel.find(userFilter).lean();
+  }
 
   async findOne(id: string, tenantId: string, userRole?: string): Promise<any> {
     let user;
@@ -80,24 +113,17 @@ export class UserService {
       }
     }
 
-
-
     let user;
     if (userRole === 'admin') {
       user = await this.userModel.findByIdAndUpdate(id, updateUserDto, { new: true });
     } else {
-      user = await this.userModel.findOneAndUpdate(
-        { _id: id, tenantId },
-        updateUserDto,
-        { new: true }
-      );
+      user = await this.userModel.findOneAndUpdate({ _id: id, tenantId }, updateUserDto, { new: true });
     }
     if (!user) {
       throw new NotFoundException(`User with ID ${id} not found`);
     }
     return user;
   }
-
 
   async remove(id: string, tenantId: string, userRole?: string) {
     let user;

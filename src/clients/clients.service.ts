@@ -15,7 +15,12 @@ export class ClientsService {
 
 
 
-  create(createClientDto: CreateClientDto, userRole?: string) {
+  create(createClientDto: CreateClientDto, userRole?: string, userId?: string) {
+    console.log('Creating client with data:', createClientDto, 'User Role:', userRole, 'User ID:', userId);
+    if (userId) {
+      createClientDto.createdby = userId;
+    }
+    console.log('Final client data to save:', createClientDto);
     const createdClient = new this.clientModel(createClientDto);
     return createdClient.save();
   }
@@ -24,27 +29,30 @@ export class ClientsService {
 
   findAll(tenantId: string, userRole?: string) {
     if (userRole === 'admin') {
-      return this.clientModel.find({}).exec();
+      return this.clientModel.find({}).populate('createdby', 'name').exec();
     }
-    return this.clientModel.find({ tenantId }).exec();
+    return this.clientModel.find({ tenantId }).populate('createdby', 'name').exec();
   }
 
 
 
   findOne(id: string, tenantId: string, userRole?: string) {
     if (userRole === 'admin') {
-      return this.clientModel.findById(id).exec();
+      return this.clientModel.findById(id).populate('createdby', 'name').exec();
     }
-    return this.clientModel.findOne({ _id: id, tenantId }).exec();
+    return this.clientModel.findOne({ _id: id, tenantId }).populate('createdby', 'name').exec();
   }
 
 
 
-  update(id: string, updateClientDto: UpdateClientDto, tenantId: string, userRole?: string) {
-    if (userRole === 'admin') {
-      return this.clientModel.findByIdAndUpdate(id, updateClientDto, { new: true }).exec();
+  update(id: string, updateClientDto: UpdateClientDto, tenantId: string, userRole?: string, userId?: string) {
+     if (userId) {
+      updateClientDto.createdby = userId;
     }
-    return this.clientModel.findOneAndUpdate({ _id: id, tenantId }, updateClientDto, { new: true }).exec();
+    if (userRole === 'admin') {
+      return this.clientModel.findByIdAndUpdate(id, updateClientDto, { new: true }).populate('createdby', 'name').exec();
+    }
+    return this.clientModel.findOneAndUpdate({ _id: id, tenantId }, updateClientDto, { new: true }).populate('createdby', 'name').exec();
   }
 
 

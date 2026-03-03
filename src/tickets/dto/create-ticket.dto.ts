@@ -1,14 +1,17 @@
-import { IsString, IsOptional, IsEnum, IsDate } from 'class-validator';
-import { TicketPriority, TicketStatus } from '../tickets.constants';
+import { IsString, IsOptional, IsEnum } from 'class-validator';
+import { TicketPriority, TicketStatus, TicketType } from '../tickets.constants';
 
 export class CreateTicketDto {
-  @IsString()
+  @IsOptional()
   tenantId: string;
   @IsString()
   title: string;
 
   @IsString()
   description: string;
+
+  @IsEnum(TicketType)
+  type: TicketType;
 
   @IsOptional()
   @IsString()
@@ -20,11 +23,6 @@ export class CreateTicketDto {
   @IsEnum(TicketStatus)
   status: TicketStatus;
 
-  @IsOptional()
   @IsString()
-  assignedTo?: string;
-
-  @IsOptional()
-  @IsString()
-  category?: string;
+  technician: string;
 }

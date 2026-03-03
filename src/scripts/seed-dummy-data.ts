@@ -10,7 +10,7 @@ import { CctvService } from '../cctv/cctv.service';
 import { SuppliersService } from '../suppliers/suppliers.service';
 import { InventoryCategory } from '../inventory/inventory.constants';
 import { AMCStatus } from '../amc/amc.constants';
-import { TicketStatus, TicketPriority } from '../tickets/tickets.constants';
+import { TicketStatus, TicketPriority, TicketType } from '../tickets/tickets.constants';
 
 async function bootstrap() {
   const app = await NestFactory.createApplicationContext(AppModule);
@@ -65,8 +65,8 @@ async function bootstrap() {
     tenantId: 'tenant1',
     clientId: String(clientDocs[0]._id),
     contractNumber: 'AMC-001',
-    startDate: new Date(),
-    endDate: new Date(Date.now() + 31536000000),
+    startDate: new Date().toISOString(),
+    endDate: new Date(Date.now() + 31536000000).toISOString(),
     amount: 500,
     status: AMCStatus.ACTIVE,
     planType: 'home',
@@ -91,8 +91,10 @@ async function bootstrap() {
     clientId: String(clientDocs[0]._id),
     title: 'Support Needed',
     description: 'Camera not working',
+    type: TicketType.CCTV_ISSUE,
     priority: TicketPriority.MEDIUM,
     status: TicketStatus.OPEN,
+    technician: 'Tech 1',
   });
 
   // CCTV

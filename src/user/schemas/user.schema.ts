@@ -24,7 +24,7 @@ export interface UserDocument extends Document {
 
 @Schema({ timestamps: true })
 export class User {
-  @Prop({ index: true }) // required handled in pre-save
+  @Prop({ type: String, required: false, index: true }) // required handled in pre-save
   tenantId?: string;
   @Prop({ required: true })
   name: string;
@@ -113,6 +113,11 @@ UserSchema.methods.matchPassword = async function (
 
 // Custom validation: tenantId required unless role is 'admin'
 UserSchema.pre<UserDocument>('save', function (next) {
+  const skipTenantValidation = Boolean((this as UserDocument & { $locals?: { skipTenantValidation?: boolean } }).$locals?.skipTenantValidation);
+  if (skipTenantValidation) {
+    return next();
+  }
+
   const role = this.get('role');
   const tenantId = this.get('tenantId');
   if (role !== 'admin' && (!tenantId || tenantId === '')) {

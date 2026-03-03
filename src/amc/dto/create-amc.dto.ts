@@ -12,11 +12,11 @@ export class CreateAmcDto {
   @IsString()
   contractNumber: string;
 
-  @IsDate()
-  startDate: Date;
+  @IsString()
+  startDate: string;
 
-  @IsDate()
-  endDate: Date;
+  @IsString()
+  endDate: string;
 
   @IsNumber()
   amount: number;
