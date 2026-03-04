@@ -1,22 +1,18 @@
-import * as nodemailer from "nodemailer";
-import config from "../../config/config";
-import { Message } from "./email.interfaces";
-import { createLogger } from "src/utils/loggers/logger.config";
-import * as path from "path";
-import * as ejs from "ejs";
-import fs from "fs";
+import * as nodemailer from 'nodemailer';
+import config from '../../config/config';
+import { Message } from './email.interfaces';
+import { createLogger } from 'src/utils/loggers/logger.config';
+import * as path from 'path';
+import * as ejs from 'ejs';
+import fs from 'fs';
 
 export const transport = nodemailer.createTransport(config.email.smtp);
 /* istanbul ignore next */
-if (process.env.ENVIRONMENT !== "test") {
+if (process.env.ENVIRONMENT !== 'test') {
   transport
     .verify()
-    .then(() => createLogger().log("Connected to email server"))
-    .catch(() =>
-      createLogger().warn(
-        "Unable to connect to email server. Make sure you have configured the SMTP options in .env"
-      )
-    );
+    .then(() => createLogger().log('Connected to email server'))
+    .catch(() => createLogger().warn('Unable to connect to email server. Make sure you have configured the SMTP options in .env'));
 }
 
 /**
@@ -27,14 +23,9 @@ if (process.env.ENVIRONMENT !== "test") {
  * @param {string} html
  * @returns {Promise<void>}
  */
-export const sendEmail = async (
-  to: string,
-  subject: string,
-  text: string,
-  html: string
-): Promise<void> => {
+export const sendEmail = async (to: string, subject: string, text: string, html: string): Promise<void> => {
   const msg: Message = {
-    from: process.env.SMTP_USER || "",
+    from: process.env.SMTP_USER || '',
     to,
     subject,
     text,
@@ -49,11 +40,8 @@ export const sendEmail = async (
  * @param {string} token
  * @returns {Promise<void>}
  */
-export const sendResetPasswordEmail = async (
-  to: string,
-  token: string
-): Promise<void> => {
-  const subject = "Reset password";
+export const sendResetPasswordEmail = async (to: string, token: string): Promise<void> => {
+  const subject = 'Reset password';
   // replace this url with the link to the reset password page of your front-end app
   const resetPasswordUrl = `http://${config.clientUrl}/reset-password?token=${token}`;
   const text = `Hi,
@@ -74,12 +62,8 @@ export const sendResetPasswordEmail = async (
  * @param {string} name
  * @returns {Promise<void>}
  */
-export const sendVerificationEmail = async (
-  to: string,
-  token: string,
-  name: string
-): Promise<void> => {
-  const subject = "Email Verification";
+export const sendVerificationEmail = async (to: string, token: string, name: string): Promise<void> => {
+  const subject = 'Email Verification';
   // replace this url with the link to the email verification page of your front-end app
   const verificationEmailUrl = `http://${config.clientUrl}/auth/verify-email?token=${token}`;
   const text = `Hi ${name},
@@ -92,12 +76,9 @@ export const sendVerificationEmail = async (
   // ✅ Render EJS template
   // const templatePath = path.join(__dirname, '');
   // ✅ Correctly resolve the EJS template path
-  const templatePath = path.join(
-    process.cwd(),
-    "src/utils/email-templates/verify-email.ejs"
-  );
-  console.log("Resolved template path:", templatePath);
-  console.log("Sending verification email to:", name, verificationEmailUrl);
+  const templatePath = path.join(process.cwd(), 'src/utils/email-templates/verify-email.ejs');
+  console.log('Resolved template path:', templatePath);
+  console.log('Sending verification email to:', name, verificationEmailUrl);
   // ✅ Render HTML using EJS
   const html = await ejs.renderFile(templatePath, {
     name,
@@ -114,12 +95,8 @@ export const sendVerificationEmail = async (
  * @param {string} name
  * @returns {Promise<void>}
  */
-export const sendSuccessfulRegistration = async (
-  to: string,
-  token: string,
-  name: string
-): Promise<void> => {
-  const subject = "Email Verification";
+export const sendSuccessfulRegistration = async (to: string, token: string, name: string): Promise<void> => {
+  const subject = 'Email Verification';
   // replace this url with the link to the email verification page of your front-end app
   const verificationEmailUrl = `http://${config.clientUrl}/verify-email?token=${token}`;
   const text = `Hi ${name},
@@ -143,11 +120,8 @@ export const sendSuccessfulRegistration = async (
  * @param {string} name
  * @returns {Promise<void>}
  */
-export const sendAccountCreated = async (
-  to: string,
-  name: string
-): Promise<void> => {
-  const subject = "Account Created Successfully";
+export const sendAccountCreated = async (to: string, name: string): Promise<void> => {
+  const subject = 'Account Created Successfully';
   // replace this url with the link to the email verification page of your front-end app
   const loginUrl = `http://${config.clientUrl}/auth/login`;
   const text = `Hi ${name},
@@ -166,13 +140,8 @@ export const sendAccountCreated = async (
 };
 
 // Assuming sendEmail is a pre-existing function for sending emails
-export const sendContactFormdd = async (
-  to: string,
-  name: string,
-  email: string,
-  message: string
-): Promise<void> => {
-  const subject = "New Contact Form Submission";
+export const sendContactFormdd = async (to: string, name: string, email: string, message: string): Promise<void> => {
+  const subject = 'New Contact Form Submission';
 
   // Prepare the plain text content of the email
   const text = `Hi Admin,
@@ -202,14 +171,8 @@ export const sendContactFormdd = async (
 
 // Assuming sendEmail is a pre-existing function for sending emails
 
-export const sendContactForm = async (
-  adminEmail: string,
-  userEmail: string,
-  userName: string,
-  message: string,
-  adId: string
-): Promise<void> => {
-  const subjectForAdmin = "New Contact Form Submission";
+export const sendContactForm = async (adminEmail: string, userEmail: string, userName: string, message: string, adId: string): Promise<void> => {
+  const subjectForAdmin = 'New Contact Form Submission';
 
   // Admin Email Text Content (Plain Text)
   const textForAdmin = `Hi Admin,
@@ -253,7 +216,7 @@ export const sendContactForm = async (
   await sendEmail(adminEmail, subjectForAdmin, textForAdmin, htmlForAdmin);
 
   // Subject for the user confirmation email
-  const subjectForUser = "Contact Form Submitted Successfully";
+  const subjectForUser = 'Contact Form Submitted Successfully';
 
   // User Email Text Content (Plain Text)
   const textForUser = `Hi ${userName},

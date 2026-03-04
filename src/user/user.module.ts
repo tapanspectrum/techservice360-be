@@ -4,6 +4,7 @@ import { UserController } from './user.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { PassportModule } from '@nestjs/passport';
 import { User, UserSchema } from './schemas/user.schema';
+import { RolesGuard } from '../auth/roles.guard';
 
 @Module({
   imports: [
@@ -12,7 +13,7 @@ import { User, UserSchema } from './schemas/user.schema';
 
   ],
   controllers: [UserController],
-  providers: [UserService],
+  providers: [UserService, RolesGuard],
   exports: [
     MongooseModule,     // 👈 allows other modules to inject UserModel
     UserService,

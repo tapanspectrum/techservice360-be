@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { JwtService } from '@nestjs/jwt';
+import { UpdateProfileDto } from './dto/update-profile.dto';
+import { UpdateUserAdminDto } from './dto/update-user-admin.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User, UserDocument } from './schemas/user.schema';
@@ -31,45 +31,20 @@ export class UserService {
     return user;
   }
 
-  // async update(id: string, updateUserDto: UpdateUserDto) {
-  //   const user = await this.userModel.findByIdAndUpdate(id, updateUserDto, { new: true });
+  async updateProfile(id: string, updateProfileDto: UpdateProfileDto) {
+    const user = await this.userModel.findByIdAndUpdate(id, updateProfileDto, {
+      new: true,
+    });
 
-  //   if (!user) {
-  //     throw new NotFoundException(`User with ID ${id} not found`);
-  //   }
-
-  //   return user;
-  // }
-
-  async update(id: string, updateUserDto: UpdateUserDto) {
-    // 🧠 If membership is upgraded, auto-assign expiry
-    if (updateUserDto.membership) {
-      const membership = updateUserDto.membership.toLowerCase();
-
-      // Example: add expiry for paid tiers
-      const expiry = new Date();
-      switch (membership) {
-        case 'premium':
-          expiry.setDate(expiry.getDate() + 30); // 30 days
-          updateUserDto.membershipExpiresAt = expiry;
-          break;
-
-        case 'top':
-          expiry.setDate(expiry.getDate() + 15); // 15 days
-          updateUserDto.membershipExpiresAt = expiry;
-          break;
-
-        case 'platinum':
-          expiry.setDate(expiry.getDate() + 60); // 60 days plan
-          updateUserDto.membershipExpiresAt = expiry;
-          break;
-
-        default:
-          updateUserDto.membershipExpiresAt = null; // free plan has no expiry
-      }
+    if (!user) {
+      throw new NotFoundException(`User with ID ${id} not found`);
     }
 
-    const user = await this.userModel.findByIdAndUpdate(id, updateUserDto, {
+    return user;
+  }
+
+  async updateAdmin(id: string, updateUserAdminDto: UpdateUserAdminDto) {
+    const user = await this.userModel.findByIdAndUpdate(id, updateUserAdminDto, {
       new: true,
     });
 

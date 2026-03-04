@@ -6,10 +6,7 @@ import { JwtService } from "@nestjs/jwt";
 import { User, UserDocument } from "../user/schemas/user.schema";
 import { CreateUserDto } from "../user/dto/create-user.dto";
 import { LoginUserDto } from "../user/dto/login-user.dto";
-import {
-  sendEmail,
-  sendVerificationEmail,
-} from "../utils/services/email/email.service";
+import { sendVerificationEmail } from "../utils/services/email/email.service";
 
 @Injectable()
 export class AuthService {
@@ -29,9 +26,14 @@ export class AuthService {
       const userData = await user.save();
 
       const token = await this.generateToken((userData as any)._id.toString());
+      let emailSent = true;
 
-      // 2️⃣ Send the verification email
-      await sendVerificationEmail(user.email, token, user.name);
+      try {
+        await sendVerificationEmail(user.email, token, user.name);
+      } catch (emailError) {
+        emailSent = false;
+        console.warn("Verification email sending failed:", emailError);
+      }
 
       return {
         user: {
@@ -41,7 +43,10 @@ export class AuthService {
           role: userData.role,
         },
         token,
-        msg: "Registration successful! Please verify your email.",
+        emailSent,
+        msg: emailSent
+          ? "Registration successful! Please verify your email."
+          : "Registration successful, but verification email could not be sent. Please check SMTP configuration.",
       };
     } catch (error) {
       console.error("Registration error:", error);

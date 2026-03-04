@@ -20,11 +20,11 @@ export class MembershipExpiryTask {
       membership: { $ne: 'free' },
     });
 
-    for (const user of expiredUsers) {
-      user.membership = 'free';
-      user.membershipExpiresAt = null;
-      await user.save();
-    }
+    // for (const user of expiredUsers) {
+    //   user.membership = 'free';
+    //   user.membershipExpiresAt = null;
+    //   await user.save();
+    // }
 
     this.logger.log(`✅ Downgraded ${expiredUsers.length} expired users.`);
   }

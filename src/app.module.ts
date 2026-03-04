@@ -3,7 +3,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -17,26 +17,19 @@ import { RolesGuard } from './auth/roles.guard';
 import { ScheduleModule } from '@nestjs/schedule';
 import { MembershipExpiryTask } from './membership-expiry.task';
 import { MailModule } from './mail/mail.module';
-import { ClientsModule } from './clients/clients.module';
-import { TicketsModule } from './tickets/tickets.module';
-import { AmcModule } from './amc/amc.module';
-import { ProjectsModule } from './projects/projects.module';
-import { InventoryModule } from './inventory/inventory.module';
-import { BillingModule } from './billing/billing.module';
 import { NotificationsModule } from './notifications/notifications.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true, // Makes the configuration globally available in your app
-      envFilePath: '.env', // Path to your .env file
+      envFilePath: [join(process.cwd(), 'config/.env.config'), join(process.cwd(), '.env')],
     }),
-    ConfigModule.forRoot(),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'uploads'),
       serveRoot: '/uploads', // URL prefix
     }),
-    MongooseModule.forRoot(`${process.env.MONGO_URL_DEV}` ||'mongodb://68.168.222.14:21007/techservice'),
+    MongooseModule.forRoot(`${process.env.MONGO_URL_DEV}` ||'mongodb://68.168.222.14:21007/techservice-app'),
     WinstonModule.forRoot({
       transports: [
         new winston.transports.Console({
@@ -60,12 +53,6 @@ import { NotificationsModule } from './notifications/notifications.module';
     UploadModule,
     ScheduleModule.forRoot(),
     MailModule,
-    ClientsModule,
-    TicketsModule,
-    AmcModule,
-    ProjectsModule,
-    InventoryModule,
-    BillingModule,
     NotificationsModule
   ],
   controllers: [AppController],

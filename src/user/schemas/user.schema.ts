@@ -6,17 +6,12 @@ export interface UserDocument extends Document {
   name: string;
   email: string;
   password: string;
+  dob?: string;
   role: string;
   phone?: string;
   address?: string;
   avatar?: string;
   isVerified?: boolean;
-  location: {
-    type: string;
-    coordinates: number[];
-  };
-  membership: string;
-  membershipExpiresAt?: Date;
   favorites: Types.ObjectId[];
 
   matchPassword(enteredPassword: string): Promise<boolean>; // 👈 declare here
@@ -33,9 +28,12 @@ export class User {
   @Prop({ required: true })
   password: string;
 
+  @Prop({type: String })
+  dob?: string;
+
   @Prop({
     type: String,
-    enum: ['admin', 'user', 'buyer', 'seller'],
+    enum: ['admin', 'user'],
     default: 'user',
   })
   role: string;
@@ -51,32 +49,6 @@ export class User {
 
   @Prop({ default: false })
   isVerified: boolean;
-
-  @Prop({
-    type: {
-      type: String,
-      enum: ['Point'],
-      default: 'Point',
-    },
-    coordinates: {
-      type: [Number],
-      default: [0, 0],
-    },
-  })
-  location: {
-    type: string;
-    coordinates: number[];
-  };
-
-  @Prop({
-    type: String,
-    enum: ['free', 'premium', 'top'],
-    default: 'free',
-  })
-  membership: string; // 🚀 determines priority
-
-  @Prop({ type: Date, default: null })
-  membershipExpiresAt?: Date | null; // 🕓 expiry date for paid tiers
 
   // ❤️ List of ads this user has favorited
   @Prop({ type: [{ type: Types.ObjectId, ref: 'Ad' }], default: [] })
@@ -113,6 +85,25 @@ UserSchema.index({ location: '2dsphere' });
 
 // Middleware to hash password
 UserSchema.pre<UserDocument>('save', async function (next) {
+  if (this.dob) {
+    const dobDate = new Date(this.dob);
+
+    if (Number.isNaN(dobDate.getTime())) {
+      return next(new Error('Invalid date of birth.'));
+    }
+
+    const today = new Date();
+    const minAgeDate = new Date(
+      today.getFullYear() - 8,
+      today.getMonth(),
+      today.getDate(),
+    );
+
+    if (dobDate >= minAgeDate) {
+      return next(new Error('User must be older than 8 years.'));
+    }
+  }
+
   if (!this.isModified('password')) return next();
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);

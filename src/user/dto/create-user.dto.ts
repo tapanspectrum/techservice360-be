@@ -1,5 +1,12 @@
 // create-user.dto.ts
-import { IsString, IsEmail, IsOptional, IsEnum, MinLength, MaxLength, IsArray, ArrayMinSize, ArrayMaxSize, IsNumber } from 'class-validator';
+import {
+  IsString,
+  IsEmail,
+  IsOptional,
+  IsEnum,
+  MinLength,
+  IsDateString,
+} from 'class-validator';
 
 export class CreateUserDto {
   @IsString()
@@ -12,9 +19,12 @@ export class CreateUserDto {
   @MinLength(6, { message: 'Password must be at least 6 characters' })
   readonly password: string;
 
-  @IsEnum(['donor', 'receiver', 'admin'])
   @IsOptional()
-  readonly role?: 'donor' | 'receiver' | 'admin';
+  readonly dob?: string;
+
+  @IsEnum(['admin', 'user'])
+  @IsOptional()
+  readonly role?: 'admin' | 'user';
 
   @IsString()
   @IsOptional()
@@ -24,9 +34,7 @@ export class CreateUserDto {
   @IsOptional()
   readonly address?: string;
 
+  @IsString()
   @IsOptional()
-  readonly location?: {
-    type?: 'Point';
-    coordinates?: [number, number];
-  };
+  readonly avatar?: string;
 }
