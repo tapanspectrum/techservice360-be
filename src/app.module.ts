@@ -18,6 +18,15 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { MembershipExpiryTask } from './membership-expiry.task';
 import { MailModule } from './mail/mail.module';
 import { NotificationsModule } from './notifications/notifications.module';
+import { TenantsModule } from './tenants/tenants.module';
+import { ClientsModule } from './clients/clients.module';
+import { CctvModule } from './cctv/cctv.module';
+import { RepairsModule } from './repairs/repairs.module';
+import { InventoryModule } from './inventory/inventory.module';
+import { TicketsModule } from './tickets/tickets.module';
+import { ReportsModule } from './reports/reports.module';
+import { DashboardModule } from './dashboard/dashboard.module';
+import { AmcModule } from './amc/amc.module';
 
 @Module({
   imports: [
@@ -53,7 +62,16 @@ import { NotificationsModule } from './notifications/notifications.module';
     UploadModule,
     ScheduleModule.forRoot(),
     MailModule,
-    NotificationsModule
+    NotificationsModule,
+    TenantsModule,
+    ClientsModule,
+    CctvModule,
+    RepairsModule,
+    InventoryModule,
+    TicketsModule,
+    ReportsModule,
+    DashboardModule,
+    AmcModule,
   ],
   controllers: [AppController],
   providers: [AppService, RolesGuard, MembershipExpiryTask],
