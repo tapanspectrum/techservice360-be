@@ -8,6 +8,8 @@ export interface UserDocument extends Document {
   password: string;
   dob?: string;
   role: string;
+  tenantId?: Types.ObjectId;
+  clientId?: Types.ObjectId;
   phone?: string;
   address?: string;
   avatar?: string;
@@ -33,10 +35,16 @@ export class User {
 
   @Prop({
     type: String,
-    enum: ['admin', 'user'],
+    enum: ['admin', 'tech', 'client', 'supplier', 'user', 'tenant'],
     default: 'user',
   })
   role: string;
+
+  @Prop({ type: Types.ObjectId, ref: 'User' })
+  tenantId?: Types.ObjectId;
+
+  @Prop({ type: Types.ObjectId, ref: 'User' })
+  clientId?: Types.ObjectId;
 
   @Prop()
   phone?: string;

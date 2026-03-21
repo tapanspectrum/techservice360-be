@@ -17,10 +17,10 @@ export interface AmcProductDocument extends Omit<Document, 'model'> {
 
 @Schema({ timestamps: true })
 export class AmcProduct {
-  @Prop({ type: Types.ObjectId, ref: 'Tenant', required: true })
+  @Prop({ type: Types.ObjectId, ref: 'User', required: true })
   tenantId: Types.ObjectId;
 
-  @Prop({ type: Types.ObjectId, ref: 'Client' })
+  @Prop({ type: Types.ObjectId, ref: 'User' })
   clientId?: Types.ObjectId;
 
   @Prop({ required: true, trim: true })

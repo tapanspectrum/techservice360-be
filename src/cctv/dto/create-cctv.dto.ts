@@ -15,10 +15,10 @@ export class CreateCctvDto {
   @IsString()
   location: string;
 
-  @ApiPropertyOptional({ example: 'online', enum: ['online', 'offline', 'maintenance'] })
+  @ApiPropertyOptional({ example: 'pending', enum: ['installed', 'pending'] })
   @IsOptional()
-  @IsEnum(['online', 'offline', 'maintenance'])
-  status?: 'online' | 'offline' | 'maintenance';
+  @IsEnum(['installed', 'pending'])
+  status?: 'installed' | 'pending';
 
   @ApiPropertyOptional({ example: 'Hikvision DS-2CD1043G0-I' })
   @IsOptional()

@@ -13,16 +13,16 @@ export interface CctvDocument extends Omit<Document, 'model'> {
 
 @Schema({ timestamps: true })
 export class Cctv {
-  @Prop({ type: Types.ObjectId, ref: 'Tenant', required: true })
+  @Prop({ type: Types.ObjectId, ref: 'User', required: true })
   tenantId: Types.ObjectId;
 
-  @Prop({ type: Types.ObjectId, ref: 'Client' })
+  @Prop({ type: Types.ObjectId, ref: 'User' })
   clientId?: Types.ObjectId;
 
   @Prop({ required: true, trim: true })
   location: string;
 
-  @Prop({ required: true, enum: ['online', 'offline', 'maintenance'], default: 'online' })
+  @Prop({ required: true, enum: ['installed', 'pending'], default: 'pending' })
   status: string;
 
   @Prop({ trim: true })

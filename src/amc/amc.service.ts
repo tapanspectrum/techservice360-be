@@ -33,11 +33,23 @@ export class AmcService {
   }
 
   findAll() {
-    return this.amcProductModel.find().exec();
+    return this.amcProductModel.find().populate({
+      path: 'tenantId',
+      select: '_id name email',
+    }).populate({
+      path: 'clientId',
+      select: '_id name email',
+    }).exec();
   }
 
   findOne(id: string) {
-    return this.amcProductModel.findById(id).exec();
+    return this.amcProductModel.findById(id).populate({
+      path: 'tenantId',
+      select: '_id name email',
+    }).populate({
+      path: 'clientId',
+      select: '_id name email',
+    }).exec();
   }
 
   async update(id: string, updateAmcProductDto: UpdateAmcProductDto) {

@@ -1,15 +1,29 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateTenantDto } from './dto/create-tenant.dto';
 import { UpdateTenantDto } from './dto/update-tenant.dto';
-import { Tenant, TenantDocument } from './schemas/tenant.schema';
+import { User, UserDocument } from '../user/schemas/user.schema';
 
 @Injectable()
 export class TenantsService {
   constructor(
-    @InjectModel(Tenant.name) private readonly tenantModel: Model<TenantDocument>,
+    @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
   ) {}
+
+  private mapUserToTenant(user: any) {
+    return {
+      _id: user._id,
+      name: user.name,
+      code: this.buildBaseCode(user.name),
+      contactEmail: user.email,
+      contactPhone: user.phone,
+      address: user.address,
+      isActive: user.isVerified ?? true,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
+    };
+  }
 
   private buildBaseCode(name: string): string {
     const parts = (name || '').match(/[A-Za-z]+|\d+/g) || [];
@@ -27,43 +41,89 @@ export class TenantsService {
     return base || 'TENANT';
   }
 
-  private async generateUniqueCode(name: string): Promise<string> {
-    const baseCode = this.buildBaseCode(name);
-    let candidate = baseCode;
-    let counter = 1;
-
-    while (await this.tenantModel.exists({ code: candidate })) {
-      counter += 1;
-      candidate = `${baseCode}${counter}`;
-    }
-
-    return candidate;
+  private generateTemporaryPassword() {
+    return `Tenant@${Date.now()}aA`;
   }
 
   async create(createTenantDto: CreateTenantDto) {
-    const code = await this.generateUniqueCode(createTenantDto.name);
-    const tenant = new this.tenantModel({
-      ...createTenantDto,
-      code,
+    if (!createTenantDto.contactEmail) {
+      throw new BadRequestException('contactEmail is required to create tenant user');
+    }
+
+    const user = new this.userModel({
+      name: createTenantDto.name,
+      email: createTenantDto.contactEmail,
+      password: this.generateTemporaryPassword(),
+      role: 'tenant',
+      phone: createTenantDto.contactPhone,
+      address: createTenantDto.address,
+      isVerified: createTenantDto.isActive ?? true,
     });
-    return tenant.save();
+
+    const created = await user.save();
+    return this.mapUserToTenant(created.toObject());
   }
 
-  findAll() {
-    return this.tenantModel.find().exec();
-  }
-
-  findOne(id: string) {
-    return this.tenantModel.findById(id).exec();
-  }
-
-  update(id: string, updateTenantDto: UpdateTenantDto) {
-    return this.tenantModel
-      .findByIdAndUpdate(id, updateTenantDto, { new: true })
+  async findAll() {
+    const users = await this.userModel
+      .find({ role: 'tenant' })
+      .select('_id name email phone address isVerified createdAt updatedAt')
+      .lean()
       .exec();
+
+    return users.map((user) => this.mapUserToTenant(user));
   }
 
-  remove(id: string) {
-    return this.tenantModel.findByIdAndDelete(id).exec();
+  async findOne(id: string) {
+    const user = await this.userModel
+      .findOne({ _id: id, role: 'tenant' })
+      .select('_id name email phone address isVerified createdAt updatedAt')
+      .lean()
+      .exec();
+
+    if (!user) {
+      throw new NotFoundException('Tenant not found');
+    }
+
+    return this.mapUserToTenant(user);
+  }
+
+  async update(id: string, updateTenantDto: UpdateTenantDto) {
+    const updates: Record<string, any> = {};
+
+    if (updateTenantDto.name !== undefined) updates.name = updateTenantDto.name;
+    if (updateTenantDto.contactEmail !== undefined) updates.email = updateTenantDto.contactEmail;
+    if (updateTenantDto.contactPhone !== undefined) updates.phone = updateTenantDto.contactPhone;
+    if (updateTenantDto.address !== undefined) updates.address = updateTenantDto.address;
+    if (updateTenantDto.isActive !== undefined) updates.isVerified = updateTenantDto.isActive;
+
+    const user = await this.userModel
+      .findOneAndUpdate({ _id: id, role: 'tenant' }, updates, {
+        new: true,
+        runValidators: true,
+      })
+      .select('_id name email phone address isVerified createdAt updatedAt')
+      .lean()
+      .exec();
+
+    if (!user) {
+      throw new NotFoundException('Tenant not found');
+    }
+
+    return this.mapUserToTenant(user);
+  }
+
+  async remove(id: string) {
+    const user = await this.userModel
+      .findOneAndDelete({ _id: id, role: 'tenant' })
+      .select('_id name email phone address isVerified createdAt updatedAt')
+      .lean()
+      .exec();
+
+    if (!user) {
+      throw new NotFoundException('Tenant not found');
+    }
+
+    return this.mapUserToTenant(user);
   }
 }

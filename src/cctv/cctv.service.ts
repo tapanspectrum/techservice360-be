@@ -17,11 +17,23 @@ export class CctvService {
   }
 
   findAll() {
-    return this.cctvModel.find().exec();
+    return this.cctvModel.find().populate({
+      path: 'tenantId',
+      select: '_id name email',
+    }).populate({
+      path: 'clientId',
+      select: '_id name email',
+    }).exec();
   }
 
   findOne(id: string) {
-    return this.cctvModel.findById(id).exec();
+    return this.cctvModel.findById(id).populate({
+      path: 'tenantId',
+      select: '_id name email',
+    }).populate({
+      path: 'clientId',
+      select: '_id name email',
+    }).exec();
   }
 
   update(id: string, updateCctvDto: UpdateCctvDto) {

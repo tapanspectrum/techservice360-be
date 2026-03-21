@@ -5,7 +5,7 @@ import {
   IsOptional,
   IsEnum,
   MinLength,
-  IsDateString,
+  IsMongoId,
 } from 'class-validator';
 
 export class CreateUserDto {
@@ -22,9 +22,17 @@ export class CreateUserDto {
   @IsOptional()
   readonly dob?: string;
 
-  @IsEnum(['admin', 'user'])
   @IsOptional()
-  readonly role?: 'admin' | 'user';
+  @IsEnum(['admin', 'tech', 'client', 'supplier', 'user', 'tenant'])
+  readonly role?: 'admin' | 'tech' | 'client' | 'supplier' | 'user' | 'tenant';
+
+  @IsOptional()
+  @IsMongoId()
+  readonly tenantId?: string;
+
+  @IsOptional()
+  @IsMongoId()
+  readonly clientId?: string;
 
   @IsString()
   @IsOptional()

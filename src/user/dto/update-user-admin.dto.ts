@@ -4,12 +4,27 @@ import {
   IsBoolean,
   IsArray,
   IsMongoId,
+  IsString,
+  MinLength,
 } from 'class-validator';
 
 export class UpdateUserAdminDto {
   @IsOptional()
-  @IsEnum(['admin', 'user'])
-  role?: 'admin' | 'user';
+  @IsString()
+  @MinLength(6, { message: 'Password must be at least 6 characters' })
+  password?: string;
+
+  @IsOptional()
+  @IsEnum(['admin', 'tech', 'client', 'supplier', 'user'])
+  role?: 'admin' | 'tech' | 'client' | 'supplier' | 'user';
+
+  @IsOptional()
+  @IsMongoId()
+  tenantId?: string;
+
+  @IsOptional()
+  @IsMongoId()
+  clientId?: string;
 
   @IsOptional()
   @IsBoolean()

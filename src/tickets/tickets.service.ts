@@ -7,9 +7,7 @@ import { Ticket, TicketDocument } from './schemas/ticket.schema';
 
 @Injectable()
 export class TicketsService {
-  constructor(
-    @InjectModel(Ticket.name) private readonly ticketModel: Model<TicketDocument>,
-  ) {}
+  constructor(@InjectModel(Ticket.name) private readonly ticketModel: Model<TicketDocument>) {}
 
   create(createTicketDto: CreateTicketDto) {
     const ticket = new this.ticketModel(createTicketDto);
@@ -17,17 +15,43 @@ export class TicketsService {
   }
 
   findAll() {
-    return this.ticketModel.find().exec();
+    return this.ticketModel
+      .find()
+      .populate({
+        path: 'tenantId',
+        select: '_id name email',
+      })
+      .populate({
+        path: 'clientId',
+        select: '_id name email',
+      })
+      .populate({
+        path: 'assignedTo',
+        select: '_id name email',
+      })
+      .exec();
   }
 
   findOne(id: string) {
-    return this.ticketModel.findById(id).exec();
+    return this.ticketModel
+      .findById(id)
+      .populate({
+        path: 'tenantId',
+        select: '_id name email',
+      })
+      .populate({
+        path: 'clientId',
+        select: '_id name email',
+      })
+      .populate({
+        path: 'assignedTo',
+        select: '_id name email',
+      })
+      .exec();
   }
 
   update(id: string, updateTicketDto: UpdateTicketDto) {
-    return this.ticketModel
-      .findByIdAndUpdate(id, updateTicketDto, { new: true })
-      .exec();
+    return this.ticketModel.findByIdAndUpdate(id, updateTicketDto, { new: true }).exec();
   }
 
   remove(id: string) {

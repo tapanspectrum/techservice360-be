@@ -17,6 +17,16 @@ export class AuthController {
     private readonly jwtService: JwtService
   ) {}
 
+  private setAuthCookie(res: Response, token: string) {
+    res.cookie('access_token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      path: '/',
+    });
+  }
+
   @Post('register')
   async register(@Body() createUserDto: CreateUserDto) {
     console.log('createUserDto', createUserDto);
@@ -27,14 +37,7 @@ export class AuthController {
   @HttpCode(200)
   async login(@Body() loginUserDto: LoginUserDto, @Res({ passthrough: true }) res: Response) {
     const data = await this.authService.login(loginUserDto);
-
-    res.cookie('access_token', data.token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-      path: '/',
-    });
+    this.setAuthCookie(res, data.token);
 
     return data;
   }

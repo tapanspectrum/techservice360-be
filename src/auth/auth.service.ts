@@ -57,12 +57,31 @@ export class AuthService {
   async login(loginUserDto: LoginUserDto): Promise<any> {
     const user = await this.userModel.findOne({ email: loginUserDto.email });
     if (!user) throw new UnauthorizedException("Invalid credentials");
-    console.log("user", user);
+
     const isMatch = await user.matchPassword(loginUserDto.password);
     if (!isMatch) throw new UnauthorizedException("Invalid credentials");
 
+    const redirectTo = this.getRedirectPathByRole(user.role);
+
     const token = this.generateToken((user as any)._id.toString());
-    return { user, token };
+    return { user, token, redirectTo };
+  }
+
+  private getRedirectPathByRole(role: string): string {
+    switch (role) {
+      case 'admin':
+        return '/admin/dashboard';
+      case 'tech':
+        return '/tech/dashboard';
+      case 'client':
+        return '/client/dashboard';
+      case 'supplier':
+        return '/supplier/dashboard';
+      case 'user':
+        return '/dashboard';
+      default:
+        throw new UnauthorizedException('User role is not allowed to login');
+    }
   }
 
   generateToken(userId: string): string {

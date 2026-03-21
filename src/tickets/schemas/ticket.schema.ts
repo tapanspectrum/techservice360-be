@@ -14,10 +14,10 @@ export interface TicketDocument extends Document {
 
 @Schema({ timestamps: true })
 export class Ticket {
-  @Prop({ type: Types.ObjectId, ref: 'Tenant', required: true })
+  @Prop({ type: Types.ObjectId, ref: 'User', required: true })
   tenantId: Types.ObjectId;
 
-  @Prop({ type: Types.ObjectId, ref: 'Client' })
+  @Prop({ type: Types.ObjectId, ref: 'User' })
   clientId?: Types.ObjectId;
 
   @Prop({ required: true, trim: true })
@@ -32,8 +32,8 @@ export class Ticket {
   @Prop({ enum: ['low', 'medium', 'high', 'critical'], default: 'medium' })
   priority: string;
 
-  @Prop({ trim: true })
-  assignedTo?: string;
+  @Prop({ type: Types.ObjectId, ref: 'User' })
+  assignedTo?: Types.ObjectId;
 
   @Prop()
   closedAt?: Date;

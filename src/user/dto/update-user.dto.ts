@@ -30,8 +30,8 @@ export class UpdateUserDto {
   dob?: string;
 
   @IsOptional()
-  @IsEnum(['admin', 'user'])
-  role?: 'admin' | 'user';
+  @IsEnum(['admin', 'tech', 'client', 'supplier', 'user'])
+  role?: 'admin' | 'tech' | 'client' | 'supplier' | 'user';
 
   @IsOptional()
   @IsString()

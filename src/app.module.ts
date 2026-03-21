@@ -38,7 +38,7 @@ import { AmcModule } from './amc/amc.module';
       rootPath: join(__dirname, '..', 'uploads'),
       serveRoot: '/uploads', // URL prefix
     }),
-    MongooseModule.forRoot(`${process.env.MONGO_URL_DEV}` ||'mongodb://68.168.222.14:21007/techservice-app'),
+    MongooseModule.forRoot(process.env.MONGO_URL_DEV || 'mongodb://68.168.222.14:21007/techservice-app'),
     WinstonModule.forRoot({
       transports: [
         new winston.transports.Console({
