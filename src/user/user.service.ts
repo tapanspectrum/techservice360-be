@@ -8,6 +8,8 @@ import { Model } from 'mongoose';
 import { User, UserDocument } from './schemas/user.schema';
 import { Ticket, TicketDocument } from '../tickets/schemas/ticket.schema';
 import { Repair, RepairDocument } from '../repairs/schemas/repair.schema';
+import { NotificationsService } from '../notifications/notifications.service';
+import { NotificationStatus, NotificationType } from '../notifications/dto/create-notification.dto';
 
 @Injectable()
 export class UserService {
@@ -15,9 +17,24 @@ export class UserService {
     @InjectModel(User.name) private userModel: Model<UserDocument>,
     @InjectModel(Ticket.name) private ticketModel: Model<TicketDocument>,
     @InjectModel(Repair.name) private repairModel: Model<RepairDocument>,
+    private readonly notificationsService: NotificationsService,
   ) { }
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+
+  async create(createUserDto: CreateUserDto) {
+    const user = new this.userModel(createUserDto);
+    const savedUser = await user.save();
+
+    await this.notificationsService.create({
+      type: NotificationType.EMAIL,
+      recipient: savedUser.email,
+      message: `User created successfully: ${savedUser.name}`,
+      status: NotificationStatus.PENDING,
+      clientId: savedUser.clientId?.toString(),
+      referenceId: (savedUser as any)._id.toString(),
+      template: 'user-create',
+    });
+
+    return savedUser;
   }
 
   findAll(): Promise<any> {

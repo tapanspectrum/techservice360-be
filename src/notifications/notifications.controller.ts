@@ -1,4 +1,5 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Req, UseGuards } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { NotificationsService } from './notifications.service';
 import { CreateNotificationDto } from './dto/create-notification.dto';
 import { UpdateNotificationDto } from './dto/update-notification.dto';
@@ -28,14 +29,9 @@ export class NotificationsController {
   }
 
   @Get()
-  findAll(@Query('status') status?: string, @Query('type') type?: string) {
-    if (status) {
-      return this.notificationsService.findByStatus(status);
-    }
-    if (type) {
-      return this.notificationsService.findByType(type);
-    }
-    return this.notificationsService.findAll();
+  @UseGuards(AuthGuard('jwt'))
+  findAll(@Req() req: any, @Query('status') status?: string, @Query('type') type?: string) {
+    return this.notificationsService.findForUser(req.user, { status, type });
   }
 
   @Get(':id')
@@ -43,9 +39,27 @@ export class NotificationsController {
     return this.notificationsService.findOne(id);
   }
 
+  @Patch('mark-all-read')
+  @UseGuards(AuthGuard('jwt'))
+  markAllAsRead(@Req() req: any) {
+    return this.notificationsService.markAllAsReadForUser(req.user);
+  }
+
+  @Patch(':id/check')
+  @UseGuards(AuthGuard('jwt'))
+  markAsChecked(@Req() req: any, @Param('id') id: string) {
+    return this.notificationsService.markAsCheckedForUser(req.user, id);
+  }
+
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateNotificationDto: UpdateNotificationDto) {
     return this.notificationsService.update(id, updateNotificationDto);
+  }
+
+  @Delete('clear-all')
+  @UseGuards(AuthGuard('jwt'))
+  clearAll(@Req() req: any) {
+    return this.notificationsService.clearAllForUser(req.user);
   }
 
   @Delete(':id')
@@ -54,12 +68,14 @@ export class NotificationsController {
   }
 
   @Get('client/:clientId')
-  findByClient(@Param('clientId') clientId: string) {
-    return this.notificationsService.findByClient(clientId);
+  @UseGuards(AuthGuard('jwt'))
+  findByClient(@Req() req: any, @Param('clientId') clientId: string) {
+    return this.notificationsService.findByClientForUser(req.user, clientId);
   }
 
   @Get('recipient/:recipient')
-  findByRecipient(@Param('recipient') recipient: string) {
-    return this.notificationsService.findByRecipient(recipient);
+  @UseGuards(AuthGuard('jwt'))
+  findByRecipient(@Req() req: any, @Param('recipient') recipient: string) {
+    return this.notificationsService.findByRecipientForUser(req.user, recipient);
   }
 }

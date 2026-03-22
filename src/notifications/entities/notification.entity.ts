@@ -11,6 +11,7 @@ export enum NotificationStatus {
   SENT = 'sent',
   FAILED = 'failed',
   DELIVERED = 'delivered',
+  READ = 'read',
 }
 
 export interface INotification extends Document {
@@ -19,6 +20,7 @@ export interface INotification extends Document {
   message: string;
   subject?: string;
   status: NotificationStatus;
+  isChecked: boolean;
   clientId?: string;
   referenceId?: string;
   template?: string;

@@ -7,6 +7,7 @@ import { User, UserSchema } from './schemas/user.schema';
 import { RolesGuard } from '../auth/roles.guard';
 import { Ticket, TicketSchema } from '../tickets/schemas/ticket.schema';
 import { Repair, RepairSchema } from '../repairs/schemas/repair.schema';
+import { NotificationsModule } from '../notifications/notifications.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { Repair, RepairSchema } from '../repairs/schemas/repair.schema';
       { name: Repair.name, schema: RepairSchema },
     ]),
     PassportModule,
+    NotificationsModule,
 
   ],
   controllers: [UserController],

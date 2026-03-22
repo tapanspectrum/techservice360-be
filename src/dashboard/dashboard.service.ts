@@ -23,20 +23,11 @@ export class DashboardService {
     @InjectModel(Ticket.name) private readonly ticketModel: Model<Ticket>,
     @InjectModel(Report.name) private readonly reportModel: Model<Report>,
     @InjectModel(Notification.name)
-    private readonly notificationModel: Model<Notification>,
+    private readonly notificationModel: Model<Notification>
   ) {}
 
-  private async statusCounts(
-    model: Model<any>,
-    statuses: string[],
-    extraFilter: Record<string, any> = {},
-  ) {
-    const countPairs = await Promise.all(
-      statuses.map(async (status) => [
-        status,
-        await model.countDocuments({ ...extraFilter, status }),
-      ]),
-    );
+  private async statusCounts(model: Model<any>, statuses: string[], extraFilter: Record<string, any> = {}) {
+    const countPairs = await Promise.all(statuses.map(async (status) => [status, await model.countDocuments({ ...extraFilter, status })]));
 
     return Object.fromEntries(countPairs);
   }
@@ -45,17 +36,7 @@ export class DashboardService {
     const role = user?.role || 'user';
 
     if (role === 'admin') {
-      const [
-        users,
-        tenants,
-        clients,
-        cctv,
-        tickets,
-        repairs,
-        inventoryItems,
-        reports,
-        notifications,
-      ] = await Promise.all([
+      const [users, tenants, clients, cctv, tickets, repairs, inventoryItems, reports, notifications] = await Promise.all([
         this.userModel.countDocuments(),
         this.tenantModel.countDocuments(),
         this.clientModel.countDocuments(),
@@ -67,28 +48,12 @@ export class DashboardService {
         this.notificationModel.countDocuments(),
       ]);
 
-      const [ticketsByStatus, repairsByStatus, cctvByStatus, notificationsByStatus] =
-        await Promise.all([
-          this.statusCounts(this.ticketModel, [
-            'open',
-            'in_progress',
-            'resolved',
-            'closed',
-          ]),
-          this.statusCounts(this.repairModel, [
-            'open',
-            'in_progress',
-            'resolved',
-            'closed',
-          ]),
-          this.statusCounts(this.cctvModel, ['online', 'offline', 'maintenance']),
-          this.statusCounts(this.notificationModel, [
-            'pending',
-            'sent',
-            'failed',
-            'delivered',
-          ]),
-        ]);
+      const [ticketsByStatus, repairsByStatus, cctvByStatus, notificationsByStatus] = await Promise.all([
+        this.statusCounts(this.ticketModel, ['open', 'in_progress', 'resolved', 'closed']),
+        this.statusCounts(this.repairModel, ['open', 'in_progress', 'resolved', 'closed']),
+        this.statusCounts(this.cctvModel, ['online', 'offline', 'maintenance']),
+        this.statusCounts(this.notificationModel, ['pending', 'sent', 'failed', 'delivered']),
+      ]);
 
       return {
         role,
@@ -116,15 +81,7 @@ export class DashboardService {
       assignedTo: { $in: [user?.email, user?.name].filter(Boolean) },
     };
 
-    const [
-      myTickets,
-      myRepairs,
-      openTickets,
-      openRepairs,
-      offlineCctv,
-      lowStockItems,
-      pendingNotifications,
-    ] = await Promise.all([
+    const [myTickets, myRepairs, openTickets, openRepairs, offlineCctv, lowStockItems, pendingNotifications] = await Promise.all([
       this.ticketModel.countDocuments(userFilter),
       this.repairModel.countDocuments(userFilter),
       this.ticketModel.countDocuments({ status: 'open' }),

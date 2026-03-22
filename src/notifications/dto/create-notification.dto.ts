@@ -1,4 +1,4 @@
-import { IsString, IsOptional, IsEnum, IsPhoneNumber, IsArray } from 'class-validator';
+import { IsString, IsOptional, IsEnum, IsBoolean } from 'class-validator';
 
 export enum NotificationType {
   SMS = 'sms',
@@ -11,6 +11,7 @@ export enum NotificationStatus {
   SENT = 'sent',
   FAILED = 'failed',
   DELIVERED = 'delivered',
+  READ = 'read',
 }
 
 export class CreateNotificationDto {
@@ -41,4 +42,8 @@ export class CreateNotificationDto {
   @IsOptional()
   @IsString()
   template?: string;
+
+  @IsOptional()
+  @IsBoolean()
+  isChecked?: boolean;
 }

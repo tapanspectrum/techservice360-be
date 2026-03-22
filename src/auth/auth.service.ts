@@ -7,12 +7,15 @@ import { User, UserDocument } from "../user/schemas/user.schema";
 import { CreateUserDto } from "../user/dto/create-user.dto";
 import { LoginUserDto } from "../user/dto/login-user.dto";
 import { sendVerificationEmail } from "../utils/services/email/email.service";
+import { NotificationsService } from "../notifications/notifications.service";
+import { NotificationStatus, NotificationType } from "../notifications/dto/create-notification.dto";
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectModel(User.name) private userModel: Model<UserDocument>,
-    private jwtService: JwtService
+    private jwtService: JwtService,
+    private readonly notificationsService: NotificationsService,
   ) { }
 
   async register(createUserDto: CreateUserDto): Promise<any> {
@@ -24,6 +27,16 @@ export class AuthService {
 
       const user = new this.userModel(createUserDto);
       const userData = await user.save();
+
+      await this.notificationsService.create({
+        type: NotificationType.EMAIL,
+        recipient: userData.email,
+        message: `User registered successfully: ${userData.name}`,
+        status: NotificationStatus.PENDING,
+        clientId: userData.clientId?.toString(),
+        referenceId: (userData as any)._id.toString(),
+        template: 'user-register',
+      });
 
       const token = await this.generateToken((userData as any)._id.toString());
       let emailSent = true;

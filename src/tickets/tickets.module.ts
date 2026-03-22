@@ -4,6 +4,7 @@ import { TicketsController } from './tickets.controller';
 import { TicketsService } from './tickets.service';
 import { Ticket, TicketSchema } from './schemas/ticket.schema';
 import { User, UserSchema } from '../user/schemas/user.schema';
+import { NotificationsModule } from '../notifications/notifications.module';
 
 @Module({
   imports: [
@@ -11,6 +12,7 @@ import { User, UserSchema } from '../user/schemas/user.schema';
       { name: Ticket.name, schema: TicketSchema },
       { name: User.name, schema: UserSchema },
     ]),
+    NotificationsModule,
   ],
   controllers: [TicketsController],
   providers: [TicketsService],

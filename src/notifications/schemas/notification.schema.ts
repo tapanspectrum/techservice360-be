@@ -12,6 +12,7 @@ export enum NotificationStatus {
   SENT = 'sent',
   FAILED = 'failed',
   DELIVERED = 'delivered',
+  READ = 'read',
 }
 
 export interface NotificationDocument extends Document {
@@ -20,6 +21,7 @@ export interface NotificationDocument extends Document {
   message: string;
   subject?: string;
   status: NotificationStatus;
+  isChecked: boolean;
   clientId?: string;
   referenceId?: string;
   template?: string;
@@ -44,6 +46,9 @@ export class Notification {
 
   @Prop({ enum: NotificationStatus, default: NotificationStatus.PENDING })
   status: NotificationStatus;
+
+  @Prop({ default: false })
+  isChecked: boolean;
 
   @Prop({ trim: true })
   clientId?: string;

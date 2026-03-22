@@ -4,6 +4,8 @@ import { Model } from 'mongoose';
 import { CreateAmcProductDto } from './dto/create-amc-product.dto';
 import { UpdateAmcProductDto } from './dto/update-amc-product.dto';
 import { AmcProduct, AmcProductDocument } from './schemas/amc-product.schema';
+import { NotificationsService } from '../notifications/notifications.service';
+import { NotificationStatus, NotificationType } from '../notifications/dto/create-notification.dto';
 
 @Injectable()
 export class AmcService {
@@ -12,6 +14,7 @@ export class AmcService {
   constructor(
     @InjectModel(AmcProduct.name)
     private readonly amcProductModel: Model<AmcProductDocument>,
+    private readonly notificationsService: NotificationsService,
   ) {}
 
   private computeAmcAmount(productPrice: number): number {
@@ -20,7 +23,7 @@ export class AmcService {
     );
   }
 
-  create(createAmcProductDto: CreateAmcProductDto) {
+  async create(createAmcProductDto: CreateAmcProductDto) {
     const amcAmount = this.computeAmcAmount(createAmcProductDto.productPrice);
 
     const product = new this.amcProductModel({
@@ -29,7 +32,19 @@ export class AmcService {
       amcAmount,
     });
 
-    return product.save();
+    const savedProduct = await product.save();
+
+    await this.notificationsService.create({
+      type: NotificationType.EMAIL,
+      recipient: 'system',
+      message: `AMC reminder setup for product: ${savedProduct.productName}`,
+      status: NotificationStatus.PENDING,
+      clientId: savedProduct.clientId?.toString(),
+      referenceId: (savedProduct as any)._id.toString(),
+      template: 'amc-reminder-create',
+    });
+
+    return savedProduct;
   }
 
   findAll() {
