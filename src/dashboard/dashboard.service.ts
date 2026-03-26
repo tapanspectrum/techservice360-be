@@ -36,10 +36,13 @@ export class DashboardService {
     const role = user?.role || 'user';
 
     if (role === 'admin') {
-      const [users, tenants, clients, cctv, tickets, repairs, inventoryItems, reports, notifications] = await Promise.all([
+      const [users, admins, tenants, clients, suppliers, techs, cctv, tickets, repairs, inventoryItems, reports, notifications] = await Promise.all([
         this.userModel.countDocuments(),
-        this.tenantModel.countDocuments(),
-        this.clientModel.countDocuments(),
+        this.userModel.countDocuments({ role: 'admin' }),
+        this.userModel.countDocuments({ role: 'tenant' }),
+        this.userModel.countDocuments({ role: 'client' }),
+        this.userModel.countDocuments({ role: 'supplier' }),
+        this.userModel.countDocuments({ role: 'tech' }),
         this.cctvModel.countDocuments(),
         this.ticketModel.countDocuments(),
         this.repairModel.countDocuments(),
@@ -59,8 +62,11 @@ export class DashboardService {
         role,
         overview: {
           users,
+          admins,
           tenants,
           clients,
+          suppliers,
+          techs,
           cctv,
           tickets,
           repairs,

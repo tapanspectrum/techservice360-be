@@ -33,7 +33,8 @@ export class TicketsController {
   @Patch(':id')
   @ApiOperation({ summary: 'Update ticket by id' })
   @ApiResponse({ status: 200, description: 'Ticket updated successfully' })
-  update(@Param('id') id: string, @Body() updateTicketDto: UpdateTicketDto) {
+  update(@Param('id') id: string, @Body() updateTicketDto: any) {
+    console.log('UpdateTicketDto:', updateTicketDto);
     return this.ticketsService.update(id, updateTicketDto);
   }
 

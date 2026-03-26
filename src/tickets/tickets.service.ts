@@ -31,8 +31,8 @@ export class TicketsService {
     return savedTicket;
   }
 
-  findAll() {
-    return this.ticketModel
+  async findAll() {
+    const tickets = await this.ticketModel
       .find()
       .populate({
         path: 'tenantId',
@@ -47,6 +47,11 @@ export class TicketsService {
         select: '_id name email',
       })
       .exec();
+
+    return tickets.map((ticket) => ({
+      ...ticket.toObject(),
+      closedAt: ticket.status === 'closed' ? ticket.get('updatedAt') ?? null : null,
+    }));
   }
 
   findOne(id: string) {

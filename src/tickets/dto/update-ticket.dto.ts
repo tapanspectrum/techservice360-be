@@ -38,4 +38,7 @@ export class UpdateTicketDto {
   @IsOptional()
   @IsDateString()
   closedAt?: string;
+
+  @IsOptional()
+  hoursSpent?: number;
 }
