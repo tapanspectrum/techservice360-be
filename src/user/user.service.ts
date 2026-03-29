@@ -37,12 +37,16 @@ export class UserService {
     return savedUser;
   }
 
-  findAll(): Promise<any> {
-    return this.userModel.find({});
+  findAll(currentUserId: string): Promise<any> {
+    if (!currentUserId) {
+      return this.userModel.find({});
+    }
+
+    return this.userModel.find({ _id: { $ne: currentUserId } });
   }
 
   async getAvailableTechs(search?: string): Promise<any[]> {
-    const query: any = { role: 'tech' };
+    const query: any = { role: 'technician' };
 
     if (search?.trim()) {
       const pattern = search.trim();

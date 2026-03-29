@@ -26,6 +26,7 @@ export class AmcController {
   @Get(':id')
   @ApiOperation({ summary: 'Get AMC product by id' })
   @ApiResponse({ status: 200, description: 'AMC product fetched successfully' })
+  @ApiResponse({ status: 404, description: 'AMC product not found' })
   findOne(@Param('id') id: string) {
     return this.amcService.findOne(id);
   }
@@ -33,6 +34,7 @@ export class AmcController {
   @Patch(':id')
   @ApiOperation({ summary: 'Update AMC product by id' })
   @ApiResponse({ status: 200, description: 'AMC product updated successfully' })
+  @ApiResponse({ status: 404, description: 'AMC product not found' })
   update(
     @Param('id') id: string,
     @Body() updateAmcProductDto: UpdateAmcProductDto,
@@ -43,6 +45,7 @@ export class AmcController {
   @Delete(':id')
   @ApiOperation({ summary: 'Delete AMC product by id' })
   @ApiResponse({ status: 200, description: 'AMC product deleted successfully' })
+  @ApiResponse({ status: 404, description: 'AMC product not found' })
   remove(@Param('id') id: string) {
     return this.amcService.remove(id);
   }

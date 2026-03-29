@@ -3,9 +3,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { DashboardController } from './dashboard.controller';
 import { DashboardService } from './dashboard.service';
 import { User, UserSchema } from '../user/schemas/user.schema';
-import { Tenant, TenantSchema } from '../tenants/schemas/tenant.schema';
 import { Client, ClientSchema } from '../clients/schemas/client.schema';
-import { Cctv, CctvSchema } from '../cctv/schemas/cctv.schema';
 import { Repair, RepairSchema } from '../repairs/schemas/repair.schema';
 import { Inventory, InventorySchema } from '../inventory/schemas/inventory.schema';
 import { Ticket, TicketSchema } from '../tickets/schemas/ticket.schema';
@@ -19,9 +17,7 @@ import {
   imports: [
     MongooseModule.forFeature([
       { name: User.name, schema: UserSchema },
-      { name: Tenant.name, schema: TenantSchema },
       { name: Client.name, schema: ClientSchema },
-      { name: Cctv.name, schema: CctvSchema },
       { name: Repair.name, schema: RepairSchema },
       { name: Inventory.name, schema: InventorySchema },
       { name: Ticket.name, schema: TicketSchema },

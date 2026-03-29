@@ -1,5 +1,154 @@
 # techservice360-app-be
 
+## Clients API (Updated Payloads)
+
+Base route:
+
+```http
+/api/v1/clients
+```
+
+### Create Client
+
+```http
+POST /api/v1/clients
+Content-Type: application/json
+```
+
+```json
+{
+	"companyName": "Acme Facilities Pvt Ltd",
+	"companyPerson": "John Doe",
+	"email": "admin@acme.com",
+	"phone": "+91-9988776655",
+	"address": "Park Street, Kolkata",
+	"city": "Kolkata",
+	"type": "clinic",
+	"notes": "Primary maintenance client",
+	"isActive": true
+}
+```
+
+Required fields:
+
+- `companyName`
+- `notes`
+
+Optional fields:
+
+- `companyPerson`
+- `email`
+- `phone`
+- `address`
+- `city`
+- `type` (`stratup` | `pg` | `apartment` | `clinic`)
+- `isActive`
+
+### Update Client
+
+```http
+PATCH /api/v1/clients/:id
+Content-Type: application/json
+```
+
+```json
+{
+	"companyPerson": "Jane Doe",
+	"phone": "+91-8877665544",
+	"city": "Howrah",
+	"notes": "Escalation contact updated",
+	"isActive": true
+}
+```
+
+### Get Clients
+
+```http
+GET /api/v1/clients
+GET /api/v1/clients/:id
+```
+
+### Delete Client
+
+```http
+DELETE /api/v1/clients/:id
+```
+
+Validation behavior:
+
+- Unknown properties are rejected (`forbidNonWhitelisted: true`).
+- Only decorated DTO fields are accepted (`whitelist: true`).
+
+## AMC API (Updated Payloads)
+
+Base route:
+
+```http
+/api/v1/amc
+```
+
+### Create AMC Product
+
+```http
+POST /api/v1/amc
+Content-Type: application/json
+```
+
+```json
+{
+	"clientId": "65f0a2d9e4f13a2b4d7e8c11",
+	"productId": "INV-PROD-001",
+	"amcAmount": 1250,
+	"status": "active",
+	"startDate": "2026-03-01T00:00:00.000Z",
+	"endDate": "2027-02-28T23:59:59.000Z"
+}
+```
+
+Required fields:
+
+- `productId`
+- `amcAmount`
+
+Optional fields:
+
+- `clientId`
+- `status` (`active` | `expired`)
+- `startDate`
+- `endDate`
+
+Notes:
+
+- `amcPercentage` is fixed by backend and hidden from API response.
+
+### Update AMC Product
+
+```http
+PATCH /api/v1/amc/:id
+Content-Type: application/json
+```
+
+```json
+{
+	"amcAmount": 1500,
+	"status": "active",
+	"endDate": "2027-06-30T23:59:59.000Z"
+}
+```
+
+### Get AMC Products
+
+```http
+GET /api/v1/amc
+GET /api/v1/amc/:id
+```
+
+### Delete AMC Product
+
+```http
+DELETE /api/v1/amc/:id
+```
+
 
 
 ## Getting started

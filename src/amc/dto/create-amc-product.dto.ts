@@ -1,6 +1,6 @@
 import {
   IsDateString,
-  IsEnum,
+  IsIn,
   IsMongoId,
   IsNumber,
   IsOptional,
@@ -10,37 +10,23 @@ import {
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CreateAmcProductDto {
-  @ApiProperty({ example: '65f0a2d9e4f13a2b4d7e8c10' })
-  @IsMongoId()
-  tenantId: string;
-
   @ApiPropertyOptional({ example: '65f0a2d9e4f13a2b4d7e8c11' })
   @IsOptional()
   @IsMongoId()
   clientId?: string;
 
-  @ApiProperty({ example: 'DVR 8 Channel' })
+  @ApiProperty({ example: 'INV-PROD-001' })
   @IsString()
-  productName: string;
+  productId: string;
 
-  @ApiPropertyOptional({ example: 'Hikvision DS-7208' })
-  @IsOptional()
-  @IsString()
-  model?: string;
-
-  @ApiPropertyOptional({ example: 'SERIAL-99887' })
-  @IsOptional()
-  @IsString()
-  serialNumber?: string;
-
-  @ApiProperty({ example: 25000 })
+  @ApiProperty({ example: 1250 })
   @IsNumber()
   @Min(0)
-  productPrice: number;
+  amcAmount: number;
 
   @ApiPropertyOptional({ example: 'active', enum: ['active', 'expired'] })
   @IsOptional()
-  @IsEnum(['active', 'expired'])
+  @IsIn(['active', 'expired'])
   status?: 'active' | 'expired';
 
   @ApiPropertyOptional({ example: '2026-03-01T00:00:00.000Z' })

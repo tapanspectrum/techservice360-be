@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Req } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
@@ -19,8 +19,10 @@ export class UserController {
   }
 
   @Get()
-  findAll() {
-    return this.userService.findAll();
+  @UseGuards(AuthGuard('jwt'))
+  findAll(@Req() req) {
+    console.log('Fetching all users', req?.user?._id);
+    return this.userService.findAll(req?.user?._id ?? '');
   }
 
   @Get('available-techs')

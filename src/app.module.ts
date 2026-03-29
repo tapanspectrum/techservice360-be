@@ -20,7 +20,6 @@ import { MailModule } from './mail/mail.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { TenantsModule } from './tenants/tenants.module';
 import { ClientsModule } from './clients/clients.module';
-import { CctvModule } from './cctv/cctv.module';
 import { RepairsModule } from './repairs/repairs.module';
 import { InventoryModule } from './inventory/inventory.module';
 import { TicketsModule } from './tickets/tickets.module';
@@ -38,7 +37,7 @@ import { AmcModule } from './amc/amc.module';
       rootPath: join(__dirname, '..', 'uploads'),
       serveRoot: '/uploads', // URL prefix
     }),
-    MongooseModule.forRoot(process.env.MONGO_URL_DEV || 'mongodb://68.168.222.14:21007/techservice-app'),
+    MongooseModule.forRoot(process.env.MONGO_URL_DEV || 'mongodb://68.168.222.14:21007/techserviceapp'),
     WinstonModule.forRoot({
       transports: [
         new winston.transports.Console({
@@ -63,15 +62,14 @@ import { AmcModule } from './amc/amc.module';
     ScheduleModule.forRoot(),
     MailModule,
     NotificationsModule,
-    TenantsModule,
     ClientsModule,
-    CctvModule,
     RepairsModule,
     InventoryModule,
     TicketsModule,
     ReportsModule,
     DashboardModule,
     AmcModule,
+    TenantsModule
   ],
   controllers: [AppController],
   providers: [AppService, RolesGuard, MembershipExpiryTask],

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateAmcProductDto } from './dto/create-amc-product.dto';
@@ -17,19 +17,10 @@ export class AmcService {
     private readonly notificationsService: NotificationsService,
   ) {}
 
-  private computeAmcAmount(productPrice: number): number {
-    return Number(
-      ((productPrice * AmcService.FIXED_AMC_PERCENTAGE) / 100).toFixed(2),
-    );
-  }
-
   async create(createAmcProductDto: CreateAmcProductDto) {
-    const amcAmount = this.computeAmcAmount(createAmcProductDto.productPrice);
-
     const product = new this.amcProductModel({
       ...createAmcProductDto,
       amcPercentage: AmcService.FIXED_AMC_PERCENTAGE,
-      amcAmount,
     });
 
     const savedProduct = await product.save();
@@ -37,7 +28,7 @@ export class AmcService {
     await this.notificationsService.create({
       type: NotificationType.EMAIL,
       recipient: 'system',
-      message: `AMC reminder setup for product: ${savedProduct.productName}`,
+      message: `AMC reminder setup for product ID: ${savedProduct.productId}`,
       status: NotificationStatus.PENDING,
       clientId: savedProduct.clientId?.toString(),
       referenceId: (savedProduct as any)._id.toString(),
@@ -48,48 +39,57 @@ export class AmcService {
   }
 
   findAll() {
-    return this.amcProductModel.find().populate({
-      path: 'tenantId',
-      select: '_id name email',
-    }).populate({
-      path: 'clientId',
-      select: '_id name email',
-    }).exec();
+    return this.amcProductModel
+      .find()
+      .populate({
+        path: 'clientId',
+        select: '_id name email',
+      })
+      .exec();
   }
 
-  findOne(id: string) {
-    return this.amcProductModel.findById(id).populate({
-      path: 'tenantId',
-      select: '_id name email',
-    }).populate({
-      path: 'clientId',
-      select: '_id name email',
-    }).exec();
+  async findOne(id: string) {
+    const product = await this.amcProductModel
+      .findById(id)
+      .populate({
+        path: 'clientId',
+        select: '_id name email',
+      })
+      .exec();
+
+    if (!product) {
+      throw new NotFoundException('AMC product not found');
+    }
+
+    return product;
   }
 
   async update(id: string, updateAmcProductDto: UpdateAmcProductDto) {
-    const current = await this.amcProductModel.findById(id).exec();
-    if (!current) {
-      return null;
-    }
-
-    const nextPrice = updateAmcProductDto.productPrice ?? current.productPrice;
-    const amcAmount = this.computeAmcAmount(nextPrice);
-
-    return this.amcProductModel
+    const product = await this.amcProductModel
       .findByIdAndUpdate(
         id,
         {
           ...updateAmcProductDto,
           amcPercentage: AmcService.FIXED_AMC_PERCENTAGE,
-          amcAmount,
         },
-        { new: true },
+        { new: true, runValidators: true },
       )
       .exec();
+
+    if (!product) {
+      throw new NotFoundException('AMC product not found');
+    }
+
+    return product;
   }
 
-  remove(id: string) {
-    return this.amcProductModel.findByIdAndDelete(id).exec();
+  async remove(id: string) {
+    const product = await this.amcProductModel.findByIdAndDelete(id).exec();
+
+    if (!product) {
+      throw new NotFoundException('AMC product not found');
+    }
+
+    return product;
   }
 }

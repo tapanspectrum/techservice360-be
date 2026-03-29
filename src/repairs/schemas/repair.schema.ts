@@ -4,7 +4,7 @@ import { Document, Types } from 'mongoose';
 export interface RepairDocument extends Document {
   tenantId: Types.ObjectId;
   clientId?: Types.ObjectId;
-  cctvId?: Types.ObjectId;
+  productId?: Types.ObjectId;
   issue: string;
   status: string;
   priority: string;
@@ -21,8 +21,8 @@ export class Repair {
   @Prop({ type: Types.ObjectId, ref: 'Client' })
   clientId?: Types.ObjectId;
 
-  @Prop({ type: Types.ObjectId, ref: 'Cctv' })
-  cctvId?: Types.ObjectId;
+  @Prop({ type: Types.ObjectId, ref: 'Inventory' })
+  productId?: Types.ObjectId;
 
   @Prop({ required: true, trim: true })
   issue: string;

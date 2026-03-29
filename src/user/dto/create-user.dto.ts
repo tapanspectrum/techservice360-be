@@ -1,12 +1,5 @@
 // create-user.dto.ts
-import {
-  IsString,
-  IsEmail,
-  IsOptional,
-  IsEnum,
-  MinLength,
-  IsMongoId,
-} from 'class-validator';
+import { IsString, IsEmail, IsOptional, IsEnum, MinLength, IsDateString, IsBoolean } from 'class-validator';
 
 export class CreateUserDto {
   @IsString()
@@ -20,19 +13,12 @@ export class CreateUserDto {
   readonly password: string;
 
   @IsOptional()
+  @IsDateString()
   readonly dob?: string;
 
   @IsOptional()
-  @IsEnum(['admin', 'tech', 'client', 'supplier', 'user', 'tenant'])
-  readonly role?: 'admin' | 'tech' | 'client' | 'supplier' | 'user' | 'tenant';
-
-  @IsOptional()
-  @IsMongoId()
-  readonly tenantId?: string;
-
-  @IsOptional()
-  @IsMongoId()
-  readonly clientId?: string;
+  @IsEnum(['admin', 'technician', 'supplier', 'tenant', 'accountant', 'client'])
+  readonly role?: 'admin' | 'technician' | 'supplier' | 'tenant' | 'accountant' | 'client';
 
   @IsString()
   @IsOptional()
@@ -45,4 +31,12 @@ export class CreateUserDto {
   @IsString()
   @IsOptional()
   readonly avatar?: string;
+
+  @IsOptional()
+  @IsBoolean()
+  readonly isVerified?: boolean;
+
+  @IsOptional()
+  @IsBoolean()
+  readonly isActive?: boolean;
 }

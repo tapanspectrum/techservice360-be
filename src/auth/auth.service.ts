@@ -84,14 +84,16 @@ export class AuthService {
     switch (role) {
       case 'admin':
         return '/admin/dashboard';
-      case 'tech':
+      case 'technician':
         return '/tech/dashboard';
-      case 'client':
-        return '/client/dashboard';
       case 'supplier':
         return '/supplier/dashboard';
-      case 'user':
-        return '/dashboard';
+      case 'client':
+        return '/client/dashboard';
+      case 'tenant':
+        return '/tenant/dashboard';
+      case 'accountant':
+        return '/accountant/dashboard';
       default:
         throw new UnauthorizedException('User role is not allowed to login');
     }

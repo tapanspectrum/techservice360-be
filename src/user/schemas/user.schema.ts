@@ -35,16 +35,10 @@ export class User {
 
   @Prop({
     type: String,
-    enum: ['admin', 'tech', 'client', 'supplier', 'user', 'tenant'],
-    default: 'user',
+    enum: ['admin', 'technician', 'supplier', 'tenant', 'accountant', 'client'],
+    default: 'tenant',
   })
   role: string;
-
-  @Prop({ type: Types.ObjectId, ref: 'User' })
-  tenantId?: Types.ObjectId;
-
-  @Prop({ type: Types.ObjectId, ref: 'User' })
-  clientId?: Types.ObjectId;
 
   @Prop()
   phone?: string;
@@ -58,9 +52,8 @@ export class User {
   @Prop({ default: false })
   isVerified: boolean;
 
-  // ❤️ List of ads this user has favorited
-  @Prop({ type: [{ type: Types.ObjectId, ref: 'Ad' }], default: [] })
-  favorites: Types.ObjectId[];
+  @Prop({ default: false })
+  isActive?: boolean;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

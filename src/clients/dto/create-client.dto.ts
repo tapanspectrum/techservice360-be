@@ -1,14 +1,15 @@
-import { IsBoolean, IsMongoId, IsOptional, IsString, IsEmail } from 'class-validator';
+import { IsBoolean, IsIn, IsOptional, IsString, IsEmail } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CreateClientDto {
-  @ApiProperty({ example: '65f0a2d9e4f13a2b4d7e8c10' })
-  @IsMongoId()
-  tenantId: string;
-
   @ApiProperty({ example: 'Acme Facilities Pvt Ltd' })
   @IsString()
-  name: string;
+  companyName: string;
+
+  @ApiPropertyOptional({ example: 'John Doe' })
+  @IsOptional()
+  @IsString()
+  companyPerson?: string;
 
   @ApiPropertyOptional({ example: 'admin@acme.com' })
   @IsOptional()
@@ -24,6 +25,21 @@ export class CreateClientDto {
   @IsOptional()
   @IsString()
   address?: string;
+
+  @ApiPropertyOptional({ example: 'Kolkata' })
+  @IsOptional()
+  @IsString()
+  city?: string;
+
+  @ApiPropertyOptional({ example: 'clinic', enum: ['stratup', 'pg', 'apartment', 'clinic'] })
+  @IsOptional()
+  @IsString()
+  @IsIn(['stratup', 'pg', 'apartment', 'clinic'])
+  type?: string;
+
+  @ApiProperty({ example: 'Primary maintenance client' })
+  @IsString()
+  notes: string;
 
   @ApiPropertyOptional({ example: true })
   @IsOptional()

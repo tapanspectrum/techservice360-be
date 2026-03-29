@@ -26,6 +26,7 @@ export class ClientsController {
   @Get(':id')
   @ApiOperation({ summary: 'Get client by id' })
   @ApiResponse({ status: 200, description: 'Client fetched successfully' })
+  @ApiResponse({ status: 404, description: 'Client not found' })
   findOne(@Param('id') id: string) {
     return this.clientsService.findOne(id);
   }
@@ -33,6 +34,7 @@ export class ClientsController {
   @Patch(':id')
   @ApiOperation({ summary: 'Update client by id' })
   @ApiResponse({ status: 200, description: 'Client updated successfully' })
+  @ApiResponse({ status: 404, description: 'Client not found' })
   update(@Param('id') id: string, @Body() updateClientDto: UpdateClientDto) {
     return this.clientsService.update(id, updateClientDto);
   }
@@ -40,6 +42,7 @@ export class ClientsController {
   @Delete(':id')
   @ApiOperation({ summary: 'Delete client by id' })
   @ApiResponse({ status: 200, description: 'Client deleted successfully' })
+  @ApiResponse({ status: 404, description: 'Client not found' })
   remove(@Param('id') id: string) {
     return this.clientsService.remove(id);
   }

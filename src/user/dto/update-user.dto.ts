@@ -1,15 +1,5 @@
 // update-user.dto.ts
-import {
-  IsString,
-  IsOptional,
-  IsEnum,
-  MinLength,
-  IsDateString,
-  IsEmail,
-  IsBoolean,
-  IsArray,
-  IsMongoId,
-} from 'class-validator';
+import { IsString, IsOptional, IsEnum, MinLength, IsDateString, IsEmail, IsBoolean } from 'class-validator';
 
 export class UpdateUserDto {
   @IsOptional()
@@ -30,8 +20,8 @@ export class UpdateUserDto {
   dob?: string;
 
   @IsOptional()
-  @IsEnum(['admin', 'tech', 'client', 'supplier', 'user'])
-  role?: 'admin' | 'tech' | 'client' | 'supplier' | 'user';
+  @IsEnum(['admin', 'technician', 'supplier', 'tenant', 'accountant', 'client'])
+  role?: 'admin' | 'technician' | 'supplier' | 'tenant' | 'accountant' | 'client';
 
   @IsOptional()
   @IsString()
@@ -50,7 +40,6 @@ export class UpdateUserDto {
   isVerified?: boolean;
 
   @IsOptional()
-  @IsArray()
-  @IsMongoId({ each: true })
-  favorites?: string[];
+  @IsBoolean()
+  isActive?: boolean;
 }

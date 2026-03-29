@@ -2,12 +2,9 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
 
 export interface AmcProductDocument extends Omit<Document, 'model'> {
-  tenantId: Types.ObjectId;
+  // tenantId: Types.ObjectId;
   clientId?: Types.ObjectId;
-  productName: string;
-  model?: string;
-  serialNumber?: string;
-  productPrice: number;
+  productId: string;
   amcPercentage: number;
   amcAmount: number;
   status: string;
@@ -17,23 +14,14 @@ export interface AmcProductDocument extends Omit<Document, 'model'> {
 
 @Schema({ timestamps: true })
 export class AmcProduct {
-  @Prop({ type: Types.ObjectId, ref: 'User', required: true })
-  tenantId: Types.ObjectId;
+  // @Prop({ type: Types.ObjectId, ref: 'User', required: true })
+  // tenantId: Types.ObjectId;
 
   @Prop({ type: Types.ObjectId, ref: 'User' })
   clientId?: Types.ObjectId;
 
-  @Prop({ required: true, trim: true })
-  productName: string;
-
-  @Prop({ trim: true })
-  model?: string;
-
-  @Prop({ trim: true })
-  serialNumber?: string;
-
-  @Prop({ required: true, min: 0 })
-  productPrice: number;
+  @Prop({ type: Types.ObjectId, ref: 'Inventory', required: true })
+  productId?: Types.ObjectId;
 
   @Prop({ default: 5, min: 0, immutable: true })
   amcPercentage: number;

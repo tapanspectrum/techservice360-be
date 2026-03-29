@@ -1,37 +1,44 @@
-import {
-  IsOptional,
-  IsEnum,
-  IsBoolean,
-  IsArray,
-  IsMongoId,
-  IsString,
-  MinLength,
-} from 'class-validator';
+import { IsOptional, IsEnum, IsBoolean, IsString, MinLength, IsDateString, IsEmail } from 'class-validator';
 
 export class UpdateUserAdminDto {
+  @IsOptional()
+  @IsString()
+  name?: string;
+
+  @IsOptional()
+  @IsEmail()
+  email?: string;
+
   @IsOptional()
   @IsString()
   @MinLength(6, { message: 'Password must be at least 6 characters' })
   password?: string;
 
   @IsOptional()
-  @IsEnum(['admin', 'tech', 'client', 'supplier', 'user'])
-  role?: 'admin' | 'tech' | 'client' | 'supplier' | 'user';
+  @IsDateString()
+  dob?: string;
 
   @IsOptional()
-  @IsMongoId()
-  tenantId?: string;
+  @IsEnum(['admin', 'technician', 'supplier', 'tenant', 'accountant', 'client'])
+  role?: 'admin' | 'technician' | 'supplier' | 'tenant' | 'accountant' | 'client';
 
   @IsOptional()
-  @IsMongoId()
-  clientId?: string;
+  @IsString()
+  phone?: string;
+
+  @IsOptional()
+  @IsString()
+  address?: string;
+
+  @IsOptional()
+  @IsString()
+  avatar?: string;
 
   @IsOptional()
   @IsBoolean()
   isVerified?: boolean;
 
   @IsOptional()
-  @IsArray()
-  @IsMongoId({ each: true })
-  favorites?: string[];
+  @IsBoolean()
+  isActive?: boolean;
 }
